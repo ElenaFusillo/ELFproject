@@ -8,24 +8,45 @@ pi = math.pi
 mu_zero = 1.25663706212 * 10**(-6)
 
 
-#A function that will work on each cable
 def calc_phasors(I, xp, yp, ph_n_deg, xn, yn):
     '''
-    Returns the phasors of the components x and y of the magnetic induction B in a given point (xp, yp) for a given cable
-    Return value: np.matrix 2x2
+    calc_phasors(I, xp, yp, ph_n_deg, xn, yn)
+
+    It calculates the phasors of the x and y components of the magnetic induction field B in a given point for a given cable.
+
+    -------------------
+    Parameters
+    -------------------
+    I : int
+        Current (A) circulating inside the considered power line (composed of a triad of cables)
+    xp, yp : float
+        Abscissa and ordinate of the point of interest where the magnetic induction field B will be calculated at last
+    ph_n_deg : float
+        Current phase belonging to the n-th cable under consideration
+    xn, yn : float
+        Abscissa and ordinate of the n-th cable under consideration
+    -------------------
+    Returns
+    -------------------
+    phasors_n : numpy matrix 2x2
+        DESCRIZIONE
     '''
     ph_n_rad = math.radians(ph_n_deg)
     I_complex = cmath.rect(I, ph_n_rad)
     I_components = np.array([I_complex.real, I_complex.imag])
     coef = (mu_zero / (2*pi)) / ((xp - xn)**2 + (yp - yn)**2)
-    trans_fn_n = np.array([(yn - yp) * coef, (xp - xn) * coef]).reshape(2,1)
-    phasors_n = I_components * trans_fn_n
+    transfer_fn_n = np.array([(yn - yp) * coef, (xp - xn) * coef]).reshape(2,1)
+    phasors_n = I_components * transfer_fn_n
     return phasors_n
 
 #A function that will work on a single triad
 def calc_B_effective(*phasors):
     '''
     Returns the effective value of the magnetic induction B in microTesla in a given point (xp, yp), considering all the cables provided.
+
+    esempio di doc:
+    *args : tuple
+        Additional arguments should be passed as keyword arguments
     '''
     B_comp = 0
     for phasor in phasors:
