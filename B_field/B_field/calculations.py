@@ -8,7 +8,7 @@ PI = math.pi
 MU_ZERO = 1.25663706212 * 10**(-6)
 
 
-def calc_B_phasors(I, xp, yp, ph_n_deg, xn, yn):
+def calc_B_phasors(I, xp, yp, cable_array):
 
     """calc_B_phasors(I, xp, yp, ph_n_deg, xn, yn) -> B_phasors_n
 
@@ -38,7 +38,7 @@ def calc_B_phasors(I, xp, yp, ph_n_deg, xn, yn):
 
     Returns
     -------------------
-    B_phasors_n : numpy matrix 2x2
+    B_phasors_n : numpy array 2x2
         Respectively the real and imaginary part (columns) of the
         x and y components (rows) of the magnetic induction field B
         produced by a single cable in a given point
@@ -66,11 +66,11 @@ def calc_B_phasors(I, xp, yp, ph_n_deg, xn, yn):
     substations", second edition, 2008-09.
     """
 
-    ph_n_rad = math.radians(ph_n_deg)
+    ph_n_rad = math.radians(cable_array[0])
     I_complex = cmath.rect(I, ph_n_rad)
     I_components = np.array([I_complex.real, I_complex.imag])
-    coef = (MU_ZERO / (2*PI)) / ((xp - xn)**2 + (yp - yn)**2)
-    transfer_fn_n = np.array([(yn - yp) * coef, (xp - xn) * coef]).reshape(2,1)
+    coef = (MU_ZERO / (2*PI)) / ((xp - cable_array[1])**2 + (yp - cable_array[2])**2)
+    transfer_fn_n = np.array([(cable_array[2] - yp) * coef, (xp - cable_array[1]) * coef]).reshape(2,1)
     B_phasors_n = I_components * transfer_fn_n
     return B_phasors_n
 
@@ -96,7 +96,7 @@ def calc_B_effective(*B_phasors):
 
     Parameters
     -------------------
-    *B_phasors : numpy matrix 2x2
+    *B_phasors : numpy array 2x2
         Respectively the real and imaginary part (columns) of the
         x and y components (rows) of the magnetic induction field B
         produced by a single cable in a given point
@@ -135,31 +135,40 @@ def calc_B_effective(*B_phasors):
     B_effective_microT = B_effective_T*10**(6)
     return B_effective_microT
 
-def main_single(args):
+def main_single(I, xp, yp, cables_array):
     """
     Docstring needed
     """
-    B_phasors_1 = calc_B_phasors(args.I, args.xp, args.yp, args.ph_1_deg, args.x1, args.y1)
-    B_phasors_2 = calc_B_phasors(args.I, args.xp, args.yp, args.ph_2_deg, args.x2, args.y2)
-    B_phasors_3 = calc_B_phasors(args.I, args.xp, args.yp, args.ph_3_deg, args.x3, args.y3)
-    
-    B_eff = calc_B_effective(B_phasors_1, B_phasors_2, B_phasors_3)
-    
-    print('In point of coordinates (', args.xp, ',', args.yp, '), the magnetic induction is ', round(B_eff,2), ' microTesla.')
+    B_phasors_cables = np.zeros((3,2,2)) #3 sets, 2 row each, 2 columns each
+    for i in range(3):
+        B_phasors_cables[i,] = calc_B_phasors(I, xp, yp, cables_array[i,])
+
+    B_eff = calc_B_effective(B_phasors_cables[0,], B_phasors_cables[1,], B_phasors_cables[2,])
+
+    print('In point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_eff,2), ' microTesla.')
 
 
-def main_double(args):
+def main_double(currents, xp, yp, cables_array):
     """
     Docstring needed
     """
-    B_phasors_1_A = calc_B_phasors(args.A_I, args.xp, args.yp, args.A_ph_1_deg, args.A_x1, args.A_y1)
-    B_phasors_2_A = calc_B_phasors(args.A_I, args.xp, args.yp, args.A_ph_2_deg, args.A_x2, args.A_y2)
-    B_phasors_3_A = calc_B_phasors(args.A_I, args.xp, args.yp, args.A_ph_3_deg, args.A_x3, args.A_y3)
 
-    B_phasors_1_B = calc_B_phasors(args.B_I, args.xp, args.yp, args.B_ph_1_deg, args.B_x1, args.B_y1)
-    B_phasors_2_B = calc_B_phasors(args.B_I, args.xp, args.yp, args.B_ph_2_deg, args.B_x2, args.B_y2)
-    B_phasors_3_B = calc_B_phasors(args.B_I, args.xp, args.yp, args.B_ph_3_deg, args.B_x3, args.B_y3)
+    B_phasors_cables = np.zeros((2,3,2,2)) #3 sets, 2 row each, 2 columns each
+    for j in range(2):
+        for i in range(3):
+            B_phasors_cables[j,i,] = calc_B_phasors(currents[j], xp, yp, cables_array[j,i,])
 
-    B_eff = calc_B_effective(B_phasors_1_A, B_phasors_2_A, B_phasors_3_A, B_phasors_1_B, B_phasors_2_B, B_phasors_3_B)
+    B_eff = calc_B_effective(B_phasors_cables[0,0,], B_phasors_cables[0,1,], B_phasors_cables[0,2,],
+                            B_phasors_cables[1,0,], B_phasors_cables[1,1,], B_phasors_cables[1,2,],)
 
-    print('In point of coordinates (', args.xp, ',', args.yp, '), the magnetic induction is ', round(B_eff,2), ' microTesla.')
+    # B_phasors_1_A = calc_B_phasors(args.A_I, args.xp, args.yp, args.A_ph_1_deg, args.A_x1, args.A_y1)
+    # B_phasors_2_A = calc_B_phasors(args.A_I, args.xp, args.yp, args.A_ph_2_deg, args.A_x2, args.A_y2)
+    # B_phasors_3_A = calc_B_phasors(args.A_I, args.xp, args.yp, args.A_ph_3_deg, args.A_x3, args.A_y3)
+
+    # B_phasors_1_B = calc_B_phasors(args.B_I, args.xp, args.yp, args.B_ph_1_deg, args.B_x1, args.B_y1)
+    # B_phasors_2_B = calc_B_phasors(args.B_I, args.xp, args.yp, args.B_ph_2_deg, args.B_x2, args.B_y2)
+    # B_phasors_3_B = calc_B_phasors(args.B_I, args.xp, args.yp, args.B_ph_3_deg, args.B_x3, args.B_y3)
+
+    # B_eff = calc_B_effective(B_phasors_1_A, B_phasors_2_A, B_phasors_3_A, B_phasors_1_B, B_phasors_2_B, B_phasors_3_B)
+
+    print('In point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_eff,2), ' microTesla.')

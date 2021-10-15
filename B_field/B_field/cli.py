@@ -1,5 +1,9 @@
 from argparse import ArgumentParser
-from .calculations import main_single, main_double
+
+import numpy as np
+
+from .calculations import main_double, main_single
+
 
 def main():
     '''
@@ -73,9 +77,20 @@ def main():
     args = parser.parse_args()
 
     if args.subparser == 'single':
-        main_single(args)
+        cables_array = np.array([[args.ph_1_deg, args.x1, args.y1],
+                                    [args.ph_2_deg, args.x2, args.y2],
+                                    [args.ph_3_deg, args.x3, args.y3]])
+        main_single(args.I, args.xp, args.yp, cables_array)
     if args.subparser == 'double':
-        main_double(args)
+        currents = np.array([args.A_I, args.B_I])
+        cables_array = np.array([[[args.A_ph_1_deg, args.A_x1, args.A_y1],
+                                    [args.A_ph_2_deg, args.A_x2, args.A_y2],
+                                    [args.A_ph_3_deg, args.A_x3, args.A_y3]],
+
+                                    [[args.B_ph_1_deg, args.B_x1, args.B_y1],
+                                    [args.B_ph_2_deg, args.B_x2, args.B_y2],
+                                    [args.B_ph_3_deg, args.B_x3, args.B_y3]]])
+        main_double(currents, args.xp, args.yp, cables_array)
 
 if __name__ == '__main__':
     main()
