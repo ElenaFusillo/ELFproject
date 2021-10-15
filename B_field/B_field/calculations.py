@@ -22,7 +22,7 @@ def calc_B_phasors(I, xp, yp, ph_n_deg, xn, yn):
     disposition of the cable in respect to the point of interest)
     resulting in the magnetic inductin B phasor components of a
     single cable.
-    -------------------
+
     Parameters
     -------------------
     I : int
@@ -35,28 +35,26 @@ def calc_B_phasors(I, xp, yp, ph_n_deg, xn, yn):
         Current phase belonging to the n-th cable under consideration
     xn, yn : float
         Abscissa and ordinate of the n-th cable under consideration
-    -------------------
+
     Returns
     -------------------
     B_phasors_n : numpy matrix 2x2
         Respectively the real and imaginary part (columns) of the
         x and y components (rows) of the magnetic induction field B
         produced by a single cable in a given point
-    -------------------
+
     Notes
     -------------------
     The current function implements the calculations present both in
     [1]_"Norma Italiana CEI 106-11" formulas (5) and [2]_"Norma Italiana
     CEI 211-4" formulas (16), which are of the form:
-
-    .. math:: B_{x} = \frac{\mu_{0}}{2\pi} \sum_{i}I_{i} \left[ \frac{y_{i} - y_{p}}
-    { \left( x_{p} - x_{i} \right)^{2} + \left(y_{p} - y_{i} \right)^{2} } \right]\\
-    B_{y} = \frac{\mu_{0}}{2\pi} \sum_{i}I_{i} \left[ \frac{x_{p} - x_{i}}
-    { \left( x_{p} - x_{i} \right)^{2} + \left(y_{p} - y_{i} \right)^{2} } \right]\\
-    B_{z} = 0
+    .. math::
+        B_{x} = \frac{\mu_{0}}{2\pi}\sum_{i}I_{i}\left[\frac{y_{i}-y_{p}}{\left(x_{p}-x_{i}\right)^{2}+\left(y_{p}-y_{i}\right)^{2}}\right]\\
+        B_{y} = \frac{\mu_{0}}{2\pi}\sum_{i}I_{i}\left[\frac{x_{p}-x_{i}}{\left(x_{p}-x_{i}\right)^{2}+\left(y_{p}-y_{i}\right)^{2}}\right]\\
+        B_{z} = 0
 
     TODO vedere se le formule veramente vengono renderizzate, altrimenti inserire immagini?
-    -------------------
+
     References
     -------------------
     ..[1] Norma Italiana CEI 106-11, "Guide for the determination of
@@ -82,34 +80,43 @@ def calc_B_effective(*B_phasors):
     """calc_B_effective(*B_phasors) -> B_effective
 
     It calculates the effective value of the magnetic induction field B
-    (microTesla) in a given point, considering all the cables provided.
+    (microTesla) in a given point, considering the magnetic induction of
+    all the cables provided.
 
-    Firstly, the function computes the resulting real and imaginary
-    components of the x and y magnetic induction field B considering
-    all the contributes given as input.
-    Secondly, 
+    Firstly, the function computes the resulting real and imaginary parts
+    of the x and y magnetic induction field components considering all the
+    contributing cables given as input (typically three or six cables).
+    The 'B_components' 2x2 numpy matrix indicates this intermediate step.
 
+    Secondly, the module of the effective magnetic induction field B is
+    calculated as the squared root of the sum of the squares of the
+    components mentioned above.
 
-    TODO descrizione più prolissa dell'algoritmo - controllare la logica
+    Lastly, the result is transformed from Tesla units to micro Tesla units.
 
-    -------------------
     Parameters
     -------------------
     *B_phasors : numpy matrix 2x2
         Respectively the real and imaginary part (columns) of the
         x and y components (rows) of the magnetic induction field B
         produced by a single cable in a given point
-    -------------------
+
     Returns
     -------------------
-    B_effective : float
-        Effective magnetic induction field B calculated in the given point
-    -------------------
+    B_effective_microT : float
+        Effective magnetic induction field B (microTesla) calculated in the given point
+
     Notes
     -------------------
-    TODO scrivere qualche formula per questa parte qui, con i riferimenti [1][2]
-    TODO vedere se anche qui le formule si vedono bene + creare le immagini
-    -------------------
+    The current function implements the calculations present both in
+    [1]_"Norma Italiana CEI 106-11" formulas (3-4) and [2]_"Norma Italiana
+    CEI 211-4" formulas (17), which are of the form:
+    ..math::
+        \vec{B}(t) = B_{x}(t)\cdot\vec{u}_{x}+B_{y}(t)\cdot\vec{u}_{y}+B_{z}(t)\cdot\vec{u}_{z}\\
+        B = \sqrt{B_{x}^2+B_{y}^2+B_{z}^2}\\
+
+    TODO vedere se le formule veramente vengono renderizzate, altrimenti inserire immagini?
+
     References
     -------------------
     ..[1] Norma Italiana CEI 106-11, "Guide for the determination of
@@ -121,12 +128,12 @@ def calc_B_effective(*B_phasors):
     substations", second edition, 2008-09.
     """
 
-    B_component = 0
+    B_components = 0
     for B_phasor in B_phasors:
-        B_component += B_phasor
-    sum_B_component = np.sum(B_component**2)
-    B_effective = math.sqrt(sum_B_component)*10**(6)
-    return B_effective
+        B_components += B_phasor
+    B_effective_T = math.sqrt(np.sum(B_components**2))
+    B_effective_microT = B_effective_T*10**(6)
+    return B_effective_microT
 
 def main_single(args):
     """
