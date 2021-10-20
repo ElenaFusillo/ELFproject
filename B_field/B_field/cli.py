@@ -7,7 +7,16 @@ from .calculations import main_double, main_single
 
 def main():
     '''
-    TODO Needed docstring
+    *COMMAND LINE INTERFACE*
+
+    The function parses the arguments passed by the user through the command line
+    providing two options: single or double power line, i.e. three or six cables.
+
+    Depending on the option selected, data are packed in numpy arrays of different
+    fashion and the corresponding calculation functions are called.
+
+    The result is the effective magnetic induction field B (microTesla) generated
+    by the power line/lines calculated in the given point.
     '''
     parser = ArgumentParser(prog='B_field',
                             usage='%(prog)s [options] path',

@@ -10,9 +10,7 @@ MU_ZERO = 1.25663706212 * 10**(-6)
 
 def calc_B_phasors(I, xp, yp, cable_array):
 
-    """calc_B_phasors(I, xp, yp, ph_n_deg, xn, yn) -> B_phasors_n
-
-    It calculates the phasors of the x and y components of the
+    """It calculates the phasors of the x and y components of the
     magnetic induction field B in a given point for a given cable.
 
     Given the input, the function rectifies the current phase
@@ -31,10 +29,9 @@ def calc_B_phasors(I, xp, yp, cable_array):
     xp, yp : float
         Abscissa and ordinate of the point of interest where the
         magnetic induction field B will be calculated at last
-    ph_n_deg : float
-        Current phase belonging to the n-th cable under consideration
-    xn, yn : float
-        Abscissa and ordinate of the n-th cable under consideration
+    cable_array : numpy array
+        First column - Current phase belonging to the n-th cable under consideration
+        Second and third columns - Abscissa and ordinate of the n-th cable under consideration
 
     Returns
     -------------------
@@ -77,9 +74,7 @@ def calc_B_phasors(I, xp, yp, cable_array):
 
 def calc_B_effective(*B_phasors):
 
-    """calc_B_effective(*B_phasors) -> B_effective
-
-    It calculates the effective value of the magnetic induction field B
+    """It calculates the effective value of the magnetic induction field B
     (microTesla) in a given point, considering the magnetic induction of
     all the cables provided.
 
@@ -136,39 +131,69 @@ def calc_B_effective(*B_phasors):
     return B_effective_microT
 
 def main_single(I, xp, yp, cables_array):
+    """Given a single triad of cables (one power line), the function
+    computes its effective magnetic induction B in a given point.
+
+    The respective phasors of the magnetic induction B of each cable
+    are iteratively computed and then composed to obtain the result.
+
+    Parameters
+    -------------------
+    I : int
+        Current (A) circulating inside the considered power line
+        (composed of a triad of cables)
+    xp, yp : float
+        Abscissa and ordinate of the point of interest where the
+        magnetic induction field B will be calculated at last
+    cable_array : numpy array
+        First column - Current phase belonging to the n-th cable under consideration
+        Second and third columns - Abscissa and ordinate of the n-th cable under consideration
+
+    Returns
+    -------------------
+    B_eff : float
+        Effective magnetic induction field B (microTesla) calculated in the given point
     """
-    Docstring needed
-    """
+
     B_phasors_cables = np.zeros((3,2,2)) #3 sets, 2 row each, 2 columns each
     for i in range(3):
         B_phasors_cables[i,] = calc_B_phasors(I, xp, yp, cables_array[i,])
-
     B_eff = calc_B_effective(B_phasors_cables[0,], B_phasors_cables[1,], B_phasors_cables[2,])
-
     print('In point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_eff,2), ' microTesla.')
+    return B_eff
 
 
 def main_double(currents, xp, yp, cables_array):
-    """
-    Docstring needed
+    """Given two triads of cables (two power lines), the function computes
+    their composed effective magnetic induction B in a given point.
+
+    The respective phasors of the magnetic induction B of each cable
+    are iteratively computed and then composed to obtain the result.
+
+    Parameters
+    -------------------
+    currents : numpy array
+        Current (A) circulating inside the considered power lines
+        (each one composed of a triad of cables)
+    xp, yp : float
+        Abscissa and ordinate of the point of interest where the
+        magnetic induction field B will be calculated at last
+    cable_array : numpy array
+        First column - Current phase belonging to the n-th cable under consideration
+        Second and third columns - Abscissa and ordinate of the n-th cable under consideration
+
+    Returns
+    -------------------
+    B_eff : float
+        Effective magnetic induction field B (microTesla) calculated in the given point
     """
 
-    B_phasors_cables = np.zeros((2,3,2,2)) #3 sets, 2 row each, 2 columns each
+    B_phasors_cables = np.zeros((2,3,2,2))
+    #2 super-sets (two triads), 3 sets (three cables each), 2 row each, 2 columns each
     for j in range(2):
         for i in range(3):
             B_phasors_cables[j,i,] = calc_B_phasors(currents[j], xp, yp, cables_array[j,i,])
-
     B_eff = calc_B_effective(B_phasors_cables[0,0,], B_phasors_cables[0,1,], B_phasors_cables[0,2,],
                             B_phasors_cables[1,0,], B_phasors_cables[1,1,], B_phasors_cables[1,2,],)
-
-    # B_phasors_1_A = calc_B_phasors(args.A_I, args.xp, args.yp, args.A_ph_1_deg, args.A_x1, args.A_y1)
-    # B_phasors_2_A = calc_B_phasors(args.A_I, args.xp, args.yp, args.A_ph_2_deg, args.A_x2, args.A_y2)
-    # B_phasors_3_A = calc_B_phasors(args.A_I, args.xp, args.yp, args.A_ph_3_deg, args.A_x3, args.A_y3)
-
-    # B_phasors_1_B = calc_B_phasors(args.B_I, args.xp, args.yp, args.B_ph_1_deg, args.B_x1, args.B_y1)
-    # B_phasors_2_B = calc_B_phasors(args.B_I, args.xp, args.yp, args.B_ph_2_deg, args.B_x2, args.B_y2)
-    # B_phasors_3_B = calc_B_phasors(args.B_I, args.xp, args.yp, args.B_ph_3_deg, args.B_x3, args.B_y3)
-
-    # B_eff = calc_B_effective(B_phasors_1_A, B_phasors_2_A, B_phasors_3_A, B_phasors_1_B, B_phasors_2_B, B_phasors_3_B)
-
     print('In point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_eff,2), ' microTesla.')
+    return B_eff
