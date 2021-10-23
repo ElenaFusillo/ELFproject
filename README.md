@@ -49,25 +49,44 @@ Power lines can be _overhead_ or _underground_. The active conductors, i.e. unde
 To perform the calculation, using phasors, it is necessary to provide the current circulating on the line (A), the phase (°) and the spatial configuration of the conductors  (m) in a plane orthogonal to the direction of the current. The given point where the magnetic induction field will be calculated lies in this plane.
 These data can be found in the "[Linea Guida ENEL per l'applicazione del punto 5.1.3 dell'Allegato al DM 29.05.08][1]" (published by E-Distribuzione), where some usual configurations are exemplified.
 
-As a reference, a coordinate system must be assumed. For simplicity, its origin can be placed:
+As a reference, a spatial coordinate system must be assumed. Its origin will be placed:
 - on the ground, in the center of the trellis' base in case of overhead power lines;
-- on the ground, right above the middle line in case of underground power lines.
+- on the ground, right above the middle line in case of underground power lines (the cables' depth will have negative values).
+
+Moreover, the current phases are usually indicated with integer numbers referring to the numbers on a clock face, where positive angles have counterclockwise orientation starting from 3 as zero angle. Examples:
+- 4 - 330°
+- 8 - 210°
+- 12 - 90°
+
+### Normalized computation model
 
 The calculation methods are described in the two technical standards:
 - **CEI 106-11** (Guida per la determinazione delle fasce di rispetto per gli elettrodotti secondo le disposizioni del DPCM 8 luglio 2003 - Linee elettriche aeree e in cavo);
 - **CEI 211-4** (Guida ai metodi di calcolo dei campi elettrici e magnetici generati da linee e da stazioni elettriche).
 
-![Formula5_x](https://github.com/ElenaFusillo/ELFproject/blob/main/B_field/images/Formula5_x.gif "B_x")
-![Formula5_y](https://github.com/ElenaFusillo/ELFproject/blob/main/B_field/images/Formula5_y.gif "B_y")
-![Formula5_z](https://github.com/ElenaFusillo/ELFproject/blob/main/B_field/images/Formula5_z.gif "B_z")
+The normalized model for calculating the magnetic induction field B produced in a cross section of an overhead or underground power line is a two-dimensional model that applies the law of Biot-Savart to determine the magnetic induction due to each conductor carried by current and therefore the law of superposition of the effects to determine the total magnetic induction, obviously taking into account the phases of the currents, supposedly symmetrical and balanced.
 
+The following schematizations of the line are assumed:
+1. all conductors are considered straight, horizontal, of infinite length and parallel to each other;
+2. the currents are considered to be concentrated in the central axes of the overhead conductors or cables;
+3. the currents induced respectively in the guard cables for overhead lines and in the shields for underground lines are not considered as their effect on magnetic induction is considered negligible;
+4. the ground is considered perfectly transparent from the magnetic point of view and therefore the images of the conductors with respect to the ground are neglected, which at 50 Hz are at very high depths.
+
+The calculation algorithm considers the following steps:
+1. the effective values and phases of the sinusoidal currents on the conductors are represented by phasors (complex numbers): _Ii_ is the phasor of the current _i_, on conductor i;
+2. with reference to a generic point of coordinates _(xp, yp)_ on the plane orthogonal to the conductors, the phasors of the spatial components of the total magnetic induction _Bx_ and _By_ are calculated through the formulas reported here;
+
+![Formula5_x](https://github.com/ElenaFusillo/ELFproject/blob/main/B_field/images/Formula5_x.gif "B_x")         ![Formula5_y](https://github.com/ElenaFusillo/ELFproject/blob/main/B_field/images/Formula5_y.gif "B_y")         ![Formula5_z](https://github.com/ElenaFusillo/ELFproject/blob/main/B_field/images/Formula5_z.gif "B_z")
+
+3. the effective value of magnetic induction B is obtained with the formula:
+
+![Formula_4](https://github.com/ElenaFusillo/ELFproject/blob/main/B_field/images/Formula4.gif)
 
 ----------------------------
 
 **TO DO** Furthermore, the code estimates the so-called DPA (_distanza di prima approssimazione_) with reference to the limits indicated in the [D.P.C.M. 08.07.2003][3] and graphically represents the results.
 
 ----------------------------
-
 
 ## Installation
 
@@ -133,7 +152,23 @@ Once all the input arguments are provided, the code calculates the magnetic indu
 
 ## Examples
 
-**TODO** Mostrare esempi dell'output sia single che double. Fornire anche una cartella con gli esempi nel git.
+#### single
+
+Configuration A1 of the [Linea Guida ENEL][1], single triad:
+
+```bash
+py -m B_field single @./examples/Argom_Bsingle.txt
+In point of coordinates ( -20.5 , 1.0 ), the magnetic induction is  2.99  microTesla.
+```
+
+#### double
+
+Configuration A9 of the [Linea Guida ENEL][1], non-optimized balanced double triad:
+
+```bash
+py -m B_field double @./examples/Argom_Bdouble.txt
+In point of coordinates ( -5.0 , 1.0 ), the magnetic induction is  21.95  microTesla.
+```
 
 ----------------------------
 
@@ -160,10 +195,11 @@ Here are a few useful links:
 -----------
 
 **Author:**
-Elena Fusillo
-efusillo@arpae.it
-Arpae, Agenzia regionale per la prevenzione, l'ambiente e l'energia dell'Emilia Romagna
-Via Guido Alberoni, 17
+
+Elena Fusillo\
+efusillo@arpae.it\
+Arpae, Agenzia regionale per la prevenzione, l'ambiente e l'energia dell'Emilia Romagna\
+Via Guido Alberoni, 17\
 48121 Ravenna (RA), Italy
 
 ## License
