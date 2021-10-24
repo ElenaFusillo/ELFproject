@@ -44,13 +44,7 @@ def calc_B_phasors(I, xp, yp, cable_array):
     -------------------
     The current function implements the calculations present both in
     [1]_"Norma Italiana CEI 106-11" formulas (5) and [2]_"Norma Italiana
-    CEI 211-4" formulas (16), which are of the form:
-    .. math::
-        B_{x} = \frac{\mu_{0}}{2\pi}\sum_{i}I_{i}\left[\frac{y_{i}-y_{p}}{\left(x_{p}-x_{i}\right)^{2}+\left(y_{p}-y_{i}\right)^{2}}\right]\\
-        B_{y} = \frac{\mu_{0}}{2\pi}\sum_{i}I_{i}\left[\frac{x_{p}-x_{i}}{\left(x_{p}-x_{i}\right)^{2}+\left(y_{p}-y_{i}\right)^{2}}\right]\\
-        B_{z} = 0
-
-    TODO vedere se le formule veramente vengono renderizzate, altrimenti inserire immagini?
+    CEI 211-4" formulas (16).
 
     References
     -------------------
@@ -105,12 +99,7 @@ def calc_B_effective(*B_phasors):
     -------------------
     The current function implements the calculations present both in
     [1]_"Norma Italiana CEI 106-11" formulas (3-4) and [2]_"Norma Italiana
-    CEI 211-4" formulas (17), which are of the form:
-    ..math::
-        \vec{B}(t) = B_{x}(t)\cdot\vec{u}_{x}+B_{y}(t)\cdot\vec{u}_{y}+B_{z}(t)\cdot\vec{u}_{z}\\
-        B = \sqrt{B_{x}^2+B_{y}^2+B_{z}^2}\\
-
-    TODO vedere se le formule veramente vengono renderizzate, altrimenti inserire immagini?
+    CEI 211-4" formulas (17).
 
     References
     -------------------
@@ -129,6 +118,7 @@ def calc_B_effective(*B_phasors):
     B_effective_T = math.sqrt(np.sum(B_components**2))
     B_effective_microT = B_effective_T*10**(6)
     return B_effective_microT
+
 
 def main_single(I, xp, yp, cables_array):
     """Given a single triad of cables (one power line), the function

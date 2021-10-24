@@ -101,5 +101,6 @@ def main():
                                     [args.B_ph_3_deg, args.B_x3, args.B_y3]]])
         main_double(currents, args.xp, args.yp, cables_array)
 
+#Command line entry point
 if __name__ == '__main__':
     main()
