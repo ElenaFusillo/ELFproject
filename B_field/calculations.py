@@ -61,7 +61,7 @@ def calc_B_phasors(I, xp, yp, cable_array):
     I_complex = cmath.rect(I, ph_n_rad)
     I_components = np.array([I_complex.real, I_complex.imag])
     coef = (MU_ZERO / (2*PI)) / ((xp - cable_array[1])**2 + (yp - cable_array[2])**2)
-    transfer_fn_n = np.array([(cable_array[2] - yp) * coef, (xp - cable_array[1]) * coef]).reshape(2,1)
+    transfer_fn_n = np.array([(cable_array[2] - yp) * coef, (xp - cable_array[1]) * coef]).reshape(2, 1)
     B_phasors_n = I_components * transfer_fn_n
     return B_phasors_n
 
@@ -145,11 +145,11 @@ def main_single(I, xp, yp, cables_array):
         Effective magnetic induction field B (microTesla) calculated in the given point
     """
 
-    B_phasors_cables = np.zeros((3,2,2)) #3 sets, 2 row each, 2 columns each
+    B_phasors_cables = np.zeros((3, 2, 2)) #3 sets, 2 row each, 2 columns each
     for i in range(3):
         B_phasors_cables[i,] = calc_B_phasors(I, xp, yp, cables_array[i,])
     B_eff = calc_B_effective(B_phasors_cables[0,], B_phasors_cables[1,], B_phasors_cables[2,])
-    print('In point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_eff,2), ' microTesla.')
+    print('In point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_eff, 2), ' microTesla.')
     return B_eff
 
 
@@ -178,12 +178,12 @@ def main_double(currents, xp, yp, cables_array):
         Effective magnetic induction field B (microTesla) calculated in the given point
     """
 
-    B_phasors_cables = np.zeros((2,3,2,2))
+    B_phasors_cables = np.zeros((2, 3, 2, 2))
     #2 super-sets (two triads), 3 sets (three cables each), 2 row each, 2 columns each
     for j in range(2):
         for i in range(3):
             B_phasors_cables[j,i,] = calc_B_phasors(currents[j], xp, yp, cables_array[j,i,])
-    B_eff = calc_B_effective(B_phasors_cables[0,0,], B_phasors_cables[0,1,], B_phasors_cables[0,2,],
-                            B_phasors_cables[1,0,], B_phasors_cables[1,1,], B_phasors_cables[1,2,],)
-    print('In point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_eff,2), ' microTesla.')
+    B_eff = calc_B_effective(B_phasors_cables[0, 0, ], B_phasors_cables[0, 1, ], B_phasors_cables[0, 2, ],
+                             B_phasors_cables[1, 0, ], B_phasors_cables[1, 1, ], B_phasors_cables[1, 2, ],)
+    print('In point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_eff, 2), ' microTesla.')
     return B_eff

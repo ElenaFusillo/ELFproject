@@ -49,7 +49,7 @@ Power lines can be _overhead_ or _underground_. The active conductors, i.e. unde
 To perform the calculation, using phasors, it is necessary to provide the current circulating on the line (A), the phase (°) and the spatial configuration of the conductors  (m) in a plane orthogonal to the direction of the current. The given point where the magnetic induction field will be calculated lies in this plane.
 These data can be found in the "[Linea Guida ENEL per l'applicazione del punto 5.1.3 dell'Allegato al DM 29.05.08][1]" (published by E-Distribuzione), where some usual configurations are exemplified.
 
-As a reference, a spatial coordinate system must be assumed. Its origin will be placed:
+As a reference, a spatial coordinate system must be assumed. Its origin _must_ be placed:
 - on the ground, in the center of the trellis' base in case of overhead power lines;
 - on the ground, right above the middle line in case of underground power lines (the cables' depth will have negative values).
 
