@@ -1,11 +1,11 @@
-#This file contains all the fixtures needed for the tests.
-#In such way, it is possible to use them among different files containing tests.
+# This file contains all the fixtures needed for the tests.
+# In such way, it is possible to use them among multiple files containing tests.
 
-import pytest
+from pytest import fixture
 import numpy as np
 
-@pytest.fixture
-def eg_input_OH():
+@fixture
+def eg_input_single_OH():
     '''
     Overhead configuration A1 - single triad - INPUT
     '''
@@ -15,7 +15,19 @@ def eg_input_OH():
     cable_array = np.array([[330, -3.75, 6.3], [210, 3.2, 8.3], [90, -3.05, 10.3]])
     return current, xp, yp, cable_array
 
-@pytest.fixture
+@fixture
+def eg_input_single_OH_conf_file():
+    '''
+    Overhead configuration A1 - single triad - INPUT
+    '''
+    file_content, args_list  = [], ['single']
+    with open('./examples/Argom_Bsingle.txt', encoding="utf-8") as conf_file:
+        file_content = conf_file.readlines()
+        for line in file_content:
+            args_list += line.splitlines()
+    return args_list
+
+@fixture
 def eg_output_B_phasors_OH():
     '''
     Overhead configuration A1 - single cable (4-330°) - OUTPUT B PHASORS
@@ -23,7 +35,7 @@ def eg_output_B_phasors_OH():
     expected_output = np.array([float(2.58753332e-6), float(-1.49391306e-6), float(-8.17758172e-6), float(4.72132901e-6)]).reshape(2, 2)
     return expected_output
 
-@pytest.fixture
+@fixture
 def eg_input_UG():
     '''
     Underground configuration A14 - single triad - INPUT
@@ -34,7 +46,7 @@ def eg_input_UG():
     cable_array = np.array([[330, -0.2, -1.5], [210, 0, -1.5], [90, 0.2, -1.5]])
     return current, xp, yp, cable_array
 
-@pytest.fixture
+@fixture
 def eg_output_B_phasors_UG():
     '''
     Underground configuration A14 - single cable (4-330°) - OUTPUT B PHASORS
@@ -42,7 +54,7 @@ def eg_output_B_phasors_UG():
     expected_output = np.array([0, 0, float(3.62750264e-05), float(-2.09433962e-05)]).reshape(2, 2)
     return expected_output
 
-@pytest.fixture
+@fixture
 def eg_input_B_eff_single_OH():
     '''
     Overhead configuration A1 - single triad - INPUT
@@ -52,7 +64,7 @@ def eg_input_B_eff_single_OH():
     expected_input_3 = np.array([float(2.53422182e-22), float(4.13869831e-06), float(-4.75507213e-22), float(-7.76562211e-06)]).reshape(2, 2)
     return expected_input_1, expected_input_2, expected_input_3
 
-@pytest.fixture
+@fixture
 def eg_output_B_eff_single_OH():
     '''
     Overhead configuration A1 - single triad - OUTPUT
@@ -60,7 +72,7 @@ def eg_output_B_eff_single_OH():
     B_eff = 2.991776205053418
     return B_eff
 
-@pytest.fixture
+@fixture
 def eg_input_double_OH():
     '''
     Overhead configuration A9 - double triad - INPUT
@@ -77,7 +89,19 @@ def eg_input_double_OH():
                               [90, 3.2, 16.3]]])
     return currents, xp, yp, cables_array
 
-@pytest.fixture
+@fixture
+def eg_input_double_OH_conf_file():
+    '''
+    Overhead configuration A9 - double triad - INPUT
+    '''
+    file_content, args_list  = [], ['double']
+    with open('./examples/Argom_Bdouble.txt', encoding="utf-8") as conf_file:
+        file_content = conf_file.readlines()
+        for line in file_content:
+            args_list += line.splitlines()
+    return args_list
+
+@fixture
 def eg_input_B_eff_double_OH():
     '''
     Overhead configuration A9 - double triad - INPUT
@@ -90,7 +114,7 @@ def eg_input_B_eff_double_OH():
     expected_input_6 = np.array([float(5.40977452e-22), float(8.83483225e-06), float(-2.89935628e-22), float(-4.73500813e-06)]).reshape(2, 2)
     return expected_input_1, expected_input_2, expected_input_3, expected_input_4, expected_input_5, expected_input_6
 
-@pytest.fixture
+@fixture
 def eg_output_B_eff_double_OH():
     '''
     Overhead configuration A9 - double triad - OUTPUT
@@ -98,7 +122,7 @@ def eg_output_B_eff_double_OH():
     B_eff = 21.95113745163136
     return B_eff
 
-@pytest.fixture
+@fixture
 def eg_input_B_eff_UG():
     '''
     Underground configuration A14 - INPUT
@@ -108,7 +132,7 @@ def eg_input_B_eff_UG():
     expected_input_3 = np.array([0, 0, float(2.77419989e-21), float(4.53061225e-05)]).reshape(2, 2)
     return expected_input_1, expected_input_2, expected_input_3
 
-@pytest.fixture
+@fixture
 def eg_output_B_eff_UG():
     '''
     Underground configuration A14 - OUTPUT

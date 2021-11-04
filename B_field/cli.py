@@ -5,7 +5,7 @@ import numpy as np
 from .calculations import main_double, main_single
 
 
-def main():
+def main(argv = None):
     '''
     *COMMAND LINE INTERFACE*
 
@@ -83,7 +83,7 @@ def main():
     double_parser.add_argument('B_x3', type = float, help='Abscissa of the third cable (3B)')
     double_parser.add_argument('B_y3', type = float, help='Ordinate of the third cable (3B)')
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.subparser == 'single':
         cables_array = np.array([[args.ph_1_deg, args.x1, args.y1],
