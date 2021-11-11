@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 
 import numpy as np
 
-from .calculations import main_double, main_single
+from .calculations import main_double, main_single, main_single_grid
 
 def init_parser():
     '''
@@ -132,7 +132,11 @@ def main(argv=None):
 
     if args.subparser == 'single':
         cables_array = single_args_packaging(args)
+        #single point
         main_single(args.I, args.xp, args.yp, cables_array)
+        #2D grid
+        single_grid = main_single_grid(args.I, args.xp, args.yp, cables_array)
+        print('-----Grid of B field values-------\n', single_grid[2])
 
     if args.subparser == 'double':
         currents, cables_array = double_args_packaging(args)

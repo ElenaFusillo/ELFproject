@@ -149,9 +149,25 @@ def main_single(I, xp, yp, cables_array):
     for i in range(3):
         B_phasors_cables[i,] = calc_B_phasors(I, xp, yp, cables_array[i,])
     B_eff = calc_B_effective(B_phasors_cables[0,], B_phasors_cables[1,], B_phasors_cables[2,])
-    print('In point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_eff, 2), ' microTesla.')
+    # print('In point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_eff, 2), ' microTesla.')
     return B_eff
 
+def main_single_grid(I, xp, yp, cables_array):
+    '''
+    TODO Docstring
+    '''
+    nx ,ny = ((11, 11)) # è praticamente la precisione, potrei farmela dare da tastiera?
+    # 11 per far venire dei bei numeri data la dimensione +1 estremo superiore
+    x = np.linspace(xp, xp+5, nx)
+    y = np.linspace(yp, yp+5, ny)
+    z_grid = np.zeros((nx, ny))
+    # xx, yy = np.meshgrid(x, y) #sparse=False
+    xx, yy = np.meshgrid(x, y, sparse=True)
+    for i in range(nx):
+        for j in range(ny):
+            z_grid[i, j] = main_single(I, xx[0, i], yy[j, 0], cables_array)
+            # z_grid[i,j] = main_single(args.I, xx[i, j], yy[i, j], cables_array) #sparse=False
+    return x, y, z_grid
 
 def main_double(currents, xp, yp, cables_array):
     """Given two triads of cables (two power lines), the function computes
@@ -185,5 +201,11 @@ def main_double(currents, xp, yp, cables_array):
             B_phasors_cables[j,i,] = calc_B_phasors(currents[j], xp, yp, cables_array[j,i,])
     B_eff = calc_B_effective(B_phasors_cables[0, 0, ], B_phasors_cables[0, 1, ], B_phasors_cables[0, 2, ],
                              B_phasors_cables[1, 0, ], B_phasors_cables[1, 1, ], B_phasors_cables[1, 2, ],)
-    print('In point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_eff, 2), ' microTesla.')
+    # print('In point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_eff, 2), ' microTesla.')
     return B_eff
+
+def main_double_grid():
+    '''
+    TODO docstring
+    '''
+    return True
