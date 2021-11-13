@@ -2,7 +2,8 @@ from argparse import ArgumentParser
 
 import numpy as np
 
-from .calculations import main_double, main_single, main_single_grid
+from .calculations import main_double, main_grid, main_single
+
 
 def init_parser():
     '''
@@ -16,6 +17,7 @@ def init_parser():
     parser.add_argument("-v", "--version", action="version",
                          version = f"{parser.prog} version 0.1.0.dev1")
     return parser
+
 
 def init_subparser_single(subparsers):
     '''
@@ -43,6 +45,7 @@ def init_subparser_single(subparsers):
     single_parser.add_argument('x3', type=float, help='Abscissa of the third cable (3)')
     single_parser.add_argument('y3', type=float, help='Ordinate of the third cable (3)')
     return single_parser
+
 
 def init_subparser_double(subparsers):
     '''
@@ -87,28 +90,32 @@ def init_subparser_double(subparsers):
     double_parser.add_argument('B_y3', type=float, help='Ordinate of the third cable (3B)')
     return double_parser
 
+
 def single_args_packaging(args):
     '''
     Packaging of the arguments for a single triad in the wanted fashion.
     '''
-    cables_array=np.array([[args.ph_1_deg, args.x1, args.y1],
-                           [args.ph_2_deg, args.x2, args.y2],
-                           [args.ph_3_deg, args.x3, args.y3]])
-    return cables_array
+    I = args.I
+    cables_array = np.array([[args.ph_1_deg, args.x1, args.y1],
+                             [args.ph_2_deg, args.x2, args.y2],
+                             [args.ph_3_deg, args.x3, args.y3]])
+    return I, cables_array
+
 
 def double_args_packaging(args):
     '''
     Packaging of the arguments for a double triad in the wanted fashion.
     '''
-    currents=np.array([args.A_I, args.B_I])
-    cables_array=np.array([[[args.A_ph_1_deg, args.A_x1, args.A_y1],
-                            [args.A_ph_2_deg, args.A_x2, args.A_y2],
-                            [args.A_ph_3_deg, args.A_x3, args.A_y3]],
+    II = np.array([args.A_I, args.B_I])
+    cables_array = np.array([[[args.A_ph_1_deg, args.A_x1, args.A_y1],
+                              [args.A_ph_2_deg, args.A_x2, args.A_y2],
+                              [args.A_ph_3_deg, args.A_x3, args.A_y3]],
 
-                            [[args.B_ph_1_deg, args.B_x1, args.B_y1],
-                            [args.B_ph_2_deg, args.B_x2, args.B_y2],
-                            [args.B_ph_3_deg, args.B_x3, args.B_y3]]])
-    return currents, cables_array
+                             [[args.B_ph_1_deg, args.B_x1, args.B_y1],
+                              [args.B_ph_2_deg, args.B_x2, args.B_y2],
+                              [args.B_ph_3_deg, args.B_x3, args.B_y3]]])
+    return II, cables_array
+
 
 def main(argv=None):
     '''
@@ -131,16 +138,21 @@ def main(argv=None):
     args = parser.parse_args(argv)
 
     if args.subparser == 'single':
-        cables_array = single_args_packaging(args)
+        I, cables_array = single_args_packaging(args)
         #single point
-        main_single(args.I, args.xp, args.yp, cables_array)
+        main_single(I, args.xp, args.yp, cables_array)
         #2D grid
-        single_grid = main_single_grid(args.I, args.xp, args.yp, cables_array)
-        print('-----Grid of B field values-------\n', single_grid[2])
+        single_grid = main_grid(args.I, args.xp, args.yp, cables_array, args.subparser)
+        print('-----Grid of B field values (microTesla)-------\n', single_grid[2].round(2))
 
     if args.subparser == 'double':
-        currents, cables_array = double_args_packaging(args)
-        main_double(currents, args.xp, args.yp, cables_array)
+        II, cables_array = double_args_packaging(args)
+        #single point
+        main_double(II, args.xp, args.yp, cables_array)
+        #2D grid
+        double_grid = main_grid(II, args.xp, args.yp, cables_array, args.subparser)
+        print('-----Grid of B field values (microTesla)-------\n', double_grid[2].round(2))
+
 
 #Command line entry point
 if __name__ == '__main__':

@@ -152,24 +152,8 @@ def main_single(I, xp, yp, cables_array):
     # print('In point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_eff, 2), ' microTesla.')
     return B_eff
 
-def main_single_grid(I, xp, yp, cables_array):
-    '''
-    TODO Docstring
-    '''
-    nx ,ny = ((11, 11)) # è praticamente la precisione, potrei farmela dare da tastiera?
-    # 11 per far venire dei bei numeri data la dimensione +1 estremo superiore
-    x = np.linspace(xp, xp+5, nx)
-    y = np.linspace(yp, yp+5, ny)
-    z_grid = np.zeros((nx, ny))
-    # xx, yy = np.meshgrid(x, y) #sparse=False
-    xx, yy = np.meshgrid(x, y, sparse=True)
-    for i in range(nx):
-        for j in range(ny):
-            z_grid[i, j] = main_single(I, xx[0, i], yy[j, 0], cables_array)
-            # z_grid[i,j] = main_single(args.I, xx[i, j], yy[i, j], cables_array) #sparse=False
-    return x, y, z_grid
 
-def main_double(currents, xp, yp, cables_array):
+def main_double(II, xp, yp, cables_array):
     """Given two triads of cables (two power lines), the function computes
     their composed effective magnetic induction B in a given point.
 
@@ -178,7 +162,7 @@ def main_double(currents, xp, yp, cables_array):
 
     Parameters
     -------------------
-    currents : numpy array
+    II : numpy array
         Current (A) circulating inside the considered power lines
         (each one composed of a triad of cables)
     xp, yp : float
@@ -198,14 +182,28 @@ def main_double(currents, xp, yp, cables_array):
     #2 super-sets (two triads), 3 sets (three cables each), 2 row each, 2 columns each
     for j in range(2):
         for i in range(3):
-            B_phasors_cables[j,i,] = calc_B_phasors(currents[j], xp, yp, cables_array[j,i,])
+            B_phasors_cables[j, i,] = calc_B_phasors(II[j], xp, yp, cables_array[j, i,])
     B_eff = calc_B_effective(B_phasors_cables[0, 0, ], B_phasors_cables[0, 1, ], B_phasors_cables[0, 2, ],
                              B_phasors_cables[1, 0, ], B_phasors_cables[1, 1, ], B_phasors_cables[1, 2, ],)
     # print('In point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_eff, 2), ' microTesla.')
     return B_eff
 
-def main_double_grid():
+
+def main_grid(I_or_II, xp, yp, cables_array, subparser_type):
     '''
     TODO docstring
     '''
-    return True
+    nx, ny = ((11, 11))
+    x = np.linspace(xp, xp+5, nx)
+    y = np.linspace(yp, yp+5, ny)
+    z_grid = np.zeros((nx, ny))
+    xx, yy = np.meshgrid(x, y, sparse=True)
+    if subparser_type == 'single':
+        for i in range(nx):
+            for j in range(ny):
+                z_grid[i, j] = main_single(I_or_II, xx[0, i], yy[j, 0], cables_array)
+    else:
+        for i in range(nx):
+            for j in range(ny):
+                z_grid[i, j] = main_double(I_or_II, xx[0, i], yy[j, 0], cables_array)
+    return x, y, z_grid
