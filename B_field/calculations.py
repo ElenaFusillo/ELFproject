@@ -149,7 +149,6 @@ def main_single(I, xp, yp, cables_array):
     for i in range(3):
         B_phasors_cables[i,] = calc_B_phasors(I, xp, yp, cables_array[i,])
     B_eff = calc_B_effective(B_phasors_cables[0,], B_phasors_cables[1,], B_phasors_cables[2,])
-    # print('In point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_eff, 2), ' microTesla.')
     return B_eff
 
 
@@ -185,7 +184,6 @@ def main_double(II, xp, yp, cables_array):
             B_phasors_cables[j, i,] = calc_B_phasors(II[j], xp, yp, cables_array[j, i,])
     B_eff = calc_B_effective(B_phasors_cables[0, 0, ], B_phasors_cables[0, 1, ], B_phasors_cables[0, 2, ],
                              B_phasors_cables[1, 0, ], B_phasors_cables[1, 1, ], B_phasors_cables[1, 2, ],)
-    # print('In point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_eff, 2), ' microTesla.')
     return B_eff
 
 
@@ -193,9 +191,9 @@ def main_grid(I_or_II, xp, yp, cables_array, subparser_type):
     '''
     TODO docstring
     '''
-    nx, ny = ((11, 11))
-    x = np.linspace(xp, xp+5, nx)
-    y = np.linspace(yp, yp+5, ny)
+    nx, ny = ((9, 9))
+    x = np.linspace(xp-2, xp+2, nx)
+    y = np.linspace(yp-2, yp+2, ny)
     z_grid = np.zeros((nx, ny))
     xx, yy = np.meshgrid(x, y, sparse=True)
     if subparser_type == 'single':

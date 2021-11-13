@@ -28,6 +28,13 @@ def init_subparser_single(subparsers):
     single_parser = subparsers.add_parser('single', help='''Calculate the magnetic induction B
                                             for a single triad of cables''')
 
+    # OPTIONAL ARGUMENTS
+    single_parser.add_argument('-point', '-p', action='store_true', help='Point estimate of the magnetic induction B in (xp, yp)')
+    single_parser.add_argument('-bidim', '-b', action='store_true', help='2D estimate of the magnetic induction B around (xp, yp)')
+    single_parser.add_argument('-graph', '-g', action='store_true', help='Graph of the trellis and the point of interest (xp, yp)')
+    single_parser.add_argument('-dpa', '-d', action='store_true', help='Estimate of the DPA (distanza di prima approssimazione) for the given configuration')
+
+    # POSITIONAL ARGUMENTS
     single_parser.add_argument('xp', type=float, help='Abscissa of the point of interest')
     single_parser.add_argument('yp', type=float, help='Ordinate of the point of interest')
     single_parser.add_argument('I', type=int, help='''Current (A) - PCSN (Portata in corrente
@@ -56,6 +63,13 @@ def init_subparser_double(subparsers):
     double_parser = subparsers.add_parser('double', help='''Calculate the magnetic induction B
                                                         for a double triad of cables''')
 
+    # OPTIONAL ARGUMENTS
+    double_parser.add_argument('-point', '-p', action='store_true', help='Point estimate of the magnetic induction B in (xp, yp)')
+    double_parser.add_argument('-bidim', '-b', action='store_true', help='2D estimate of the magnetic induction B around (xp, yp)')
+    double_parser.add_argument('-graph', '-g', action='store_true', help='Graph of the trellis and the point of interest (xp, yp)')
+    double_parser.add_argument('-dpa', '-d', action='store_true', help='Estimate of the DPA (distanza di prima approssimazione) for the given configuration')
+
+    # POSITIONAL ARGUMENTS
     double_parser.add_argument('xp', type=float, help='Abscissa of the point of interest')
     double_parser.add_argument('yp', type=float, help='Ordinate of the point of interest')
 
@@ -139,19 +153,41 @@ def main(argv=None):
 
     if args.subparser == 'single':
         I, cables_array = single_args_packaging(args)
-        #single point
-        main_single(I, args.xp, args.yp, cables_array)
-        #2D grid
-        single_grid = main_grid(args.I, args.xp, args.yp, cables_array, args.subparser)
-        print('-----Grid of B field values (microTesla)-------\n', single_grid[2].round(2))
+
+        if args.point:
+            single_point = main_single(I, args.xp, args.yp, cables_array)
+            print('\nIn point of coordinates (', args.xp, ',', args.yp, '), the magnetic induction is ', round(single_point, 2), ' microTesla.\n')
+
+        if args.bidim:
+            single_grid = main_grid(args.I, args.xp, args.yp, cables_array, args.subparser)
+            print('''\n------Grid of B field values (microTesla)------\n----Point of interest in the matrix center-----\n\n''', single_grid[2].round(2))
+
+        if args.graph:
+            #TODO
+            return True
+
+        if args.dpa:
+            #TODO
+            return True
 
     if args.subparser == 'double':
         II, cables_array = double_args_packaging(args)
-        #single point
-        main_double(II, args.xp, args.yp, cables_array)
-        #2D grid
-        double_grid = main_grid(II, args.xp, args.yp, cables_array, args.subparser)
-        print('-----Grid of B field values (microTesla)-------\n', double_grid[2].round(2))
+
+        if args.point:
+            double_point = main_double(II, args.xp, args.yp, cables_array)
+            print('\nIn point of coordinates (', args.xp, ',', args.yp, '), the magnetic induction is ', round(double_point, 2), ' microTesla.\n')
+
+        if args.bidim:
+            double_grid = main_grid(II, args.xp, args.yp, cables_array, args.subparser)
+            print('''\n------Grid of B field values (microTesla)------\n----Point of interest in the matrix center-----\n\n''', double_grid[2].round(2))
+
+        if args.graph:
+            #TODO
+            return True
+
+        if args.dpa:
+            #TODO
+            return True
 
 
 #Command line entry point
