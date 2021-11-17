@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 import numpy as np
 
 from .calculations import main_double, main_grid, main_single
-
+from .graphics import main_graphics
 
 def init_parser():
     '''
@@ -109,17 +109,19 @@ def single_args_packaging(args):
     '''
     Packaging of the arguments for a single triad in the wanted fashion.
     '''
+    xp, yp = args.xp, args.yp
     I = args.I
     cables_array = np.array([[args.ph_1_deg, args.x1, args.y1],
                              [args.ph_2_deg, args.x2, args.y2],
                              [args.ph_3_deg, args.x3, args.y3]])
-    return I, cables_array
+    return xp, yp, I, cables_array
 
 
 def double_args_packaging(args):
     '''
     Packaging of the arguments for a double triad in the wanted fashion.
     '''
+    xp, yp = args.xp, args.yp
     II = np.array([args.A_I, args.B_I])
     cables_array = np.array([[[args.A_ph_1_deg, args.A_x1, args.A_y1],
                               [args.A_ph_2_deg, args.A_x2, args.A_y2],
@@ -128,7 +130,7 @@ def double_args_packaging(args):
                              [[args.B_ph_1_deg, args.B_x1, args.B_y1],
                               [args.B_ph_2_deg, args.B_x2, args.B_y2],
                               [args.B_ph_3_deg, args.B_x3, args.B_y3]]])
-    return II, cables_array
+    return xp, yp, II, cables_array
 
 
 def main(argv=None):
@@ -152,34 +154,36 @@ def main(argv=None):
     args = parser.parse_args(argv)
 
     if args.subparser == 'single':
-        I, cables_array = single_args_packaging(args)
+        xp, yp, I, cables_array = single_args_packaging(args)
 
         if args.point:
-            single_point = main_single(I, args.xp, args.yp, cables_array)
-            print('\nIn point of coordinates (', args.xp, ',', args.yp, '), the magnetic induction is ', round(single_point, 2), ' microTesla.\n')
+            single_point = main_single(I, xp, yp, cables_array)
+            print('\nIn point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(single_point, 2), ' microTesla.\n')
 
         if args.bidim:
-            single_grid = main_grid(args.I, args.xp, args.yp, cables_array, args.subparser)
-            print('''\n------Grid of B field values (microTesla)------\n----Point of interest in the matrix center-----\n\n''', single_grid[2].round(2))
-
+            single_grid = main_grid(I, xp, yp, cables_array, args.subparser)
+            print('''\n------Grid of B field values (microTesla)------\n----Point of interest in the matrix center-----\n\n''', np.flipud(single_grid[2].round(2)))
+            # with the flip up down you see the matrix as if it was a xy grid
+        
         if args.graph:
             #TODO
-            return True
+            return True        
 
         if args.dpa:
             #TODO
             return True
 
     if args.subparser == 'double':
-        II, cables_array = double_args_packaging(args)
+        xp, yp, II, cables_array = double_args_packaging(args)
 
         if args.point:
-            double_point = main_double(II, args.xp, args.yp, cables_array)
-            print('\nIn point of coordinates (', args.xp, ',', args.yp, '), the magnetic induction is ', round(double_point, 2), ' microTesla.\n')
+            double_point = main_double(II, xp, yp, cables_array)
+            print('\nIn point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(double_point, 2), ' microTesla.\n')
 
         if args.bidim:
-            double_grid = main_grid(II, args.xp, args.yp, cables_array, args.subparser)
-            print('''\n------Grid of B field values (microTesla)------\n----Point of interest in the matrix center-----\n\n''', double_grid[2].round(2))
+            double_grid = main_grid(II, xp, yp, cables_array, args.subparser)
+            print('''\n------Grid of B field values (microTesla)------\n----Point of interest in the matrix center-----\n\n''', np.flipud(double_grid[2].round(2)))
+            # with the flip up down you see the matrix as if it was a xy grid
 
         if args.graph:
             #TODO

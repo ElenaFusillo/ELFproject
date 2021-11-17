@@ -190,18 +190,20 @@ def main_double(II, xp, yp, cables_array):
 def main_grid(I_or_II, xp, yp, cables_array, subparser_type):
     '''
     TODO docstring
+    Step: 50cm
     '''
-    nx, ny = ((9, 9))
+    nx, ny = 9, 9
     x = np.linspace(xp-2, xp+2, nx)
     y = np.linspace(yp-2, yp+2, ny)
-    z_grid = np.zeros((nx, ny))
-    xx, yy = np.meshgrid(x, y, sparse=True)
+    z_grid = np.zeros((ny, nx))
+    X, Y = np.meshgrid(x, y, sparse=True, indexing='xy')
+    #cartesian indexing: treat X[j, i] Y[j, i]
     if subparser_type == 'single':
         for i in range(nx):
             for j in range(ny):
-                z_grid[i, j] = main_single(I_or_II, xx[0, i], yy[j, 0], cables_array)
-    else:
+                z_grid[j, i] = main_single(I_or_II, X[0, i], Y[j, 0], cables_array)
+    elif subparser_type == 'double':
         for i in range(nx):
             for j in range(ny):
-                z_grid[i, j] = main_double(I_or_II, xx[0, i], yy[j, 0], cables_array)
+                z_grid[j, i] = main_double(I_or_II, X[0, i], Y[j, 0], cables_array)
     return x, y, z_grid
