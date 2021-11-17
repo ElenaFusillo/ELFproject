@@ -166,8 +166,8 @@ def main(argv=None):
             # with the flip up down you see the matrix as if it was a xy grid
         
         if args.graph:
-            #TODO
-            return True        
+            single_grid = main_grid(I, xp, yp, cables_array, args.subparser)
+            main_graphics(single_grid[0], single_grid[1], single_grid[2], xp, yp, cables_array, args.subparser)
 
         if args.dpa:
             #TODO
@@ -186,8 +186,8 @@ def main(argv=None):
             # with the flip up down you see the matrix as if it was a xy grid
 
         if args.graph:
-            #TODO
-            return True
+            double_grid = main_grid(II, xp, yp, cables_array, args.subparser)
+            main_graphics(double_grid[0], double_grid[1], double_grid[2], xp, yp, cables_array, args.subparser)
 
         if args.dpa:
             #TODO
