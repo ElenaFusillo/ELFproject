@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 
 import numpy as np
 
-from .calculations import main_double, main_grid, main_single
+from .calculations import main_double, main_grid, main_single, dpa
 from .graphics import main_graphics
 
 def init_parser():
@@ -176,8 +176,9 @@ def main(argv=None):
             main_graphics(single_grid[0], single_grid[1], single_grid[2], xp, yp, cables_array, args.subparser)
 
         if args.dpa:
-            #TODO
-            return True
+            dpa_value = dpa(I, diam_cables, cables_array, args.subparser)
+            print('\nThe value of the DPA (Distanza di Prima Approssimazione) is ', round(dpa_value, 0), ' meters.\n')
+
 
     if args.subparser == 'double':
         xp, yp, diam_cables, II, cables_array = double_args_packaging(args)
@@ -196,8 +197,8 @@ def main(argv=None):
             main_graphics(double_grid[0], double_grid[1], double_grid[2], xp, yp, cables_array, args.subparser)
 
         if args.dpa:
-            #TODO
-            return True
+            dpa_value = dpa(II, diam_cables, cables_array, args.subparser)
+            print('\nThe value of the DPA (Distanza di Prima Approssimazione) is ', round(dpa_value, 0), ' meters.\n')
 
 
 #Command line entry point

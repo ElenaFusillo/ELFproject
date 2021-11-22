@@ -1,7 +1,7 @@
 import math
 import cmath
 import numpy as np
-
+import numpy.ma as ma
 
 #Recall all the constants needed in the program
 PI = math.pi
@@ -152,7 +152,7 @@ def main_single(I, xp, yp, diam_cables, cables_array):
     radius_cable = diam_cables/2
     B_phasors_cables = np.zeros((3, 2, 2)) #3 sets, 2 row each, 2 columns each
     for i in range(3):
-        # checking for not null denominator. Null denominator ---> dummy B value
+        # # checking for not null denominator. Null denominator ---> dummy B value
         if np.sum(np.square(point_P - np.array((cables_array[i, 1], cables_array[i, 2])))) < radius_cable:
             B_dummy = 9999
             return B_dummy
@@ -229,3 +229,55 @@ def main_grid(I_or_II, xp, yp, diam_cables, cables_array, subparser_type):
     z_grid[index_dummy] = np.unique(z_grid)[-2]
 
     return x, y, z_grid
+
+def centroid(cables_array, subparser_type):
+    '''
+    TODO docstring
+    costruzione baricentro geometrico
+    '''
+    x_sum, y_sum = 0, 0
+    num_cables = 3
+    if subparser_type == 'single':
+        for i in range(num_cables):
+            x_sum += cables_array[i, 1]
+            y_sum += cables_array[i, 2]
+        xg, yg = x_sum/num_cables, y_sum/num_cables
+    elif subparser_type == 'double':
+        num_triad = 2
+        for j in range(num_triad):
+            for i in range(num_cables):
+                x_sum += cables_array[j, i, 1]
+                y_sum += cables_array[j, i, 2]
+        xg, yg = x_sum/(num_cables*num_triad), y_sum/(num_cables*num_triad)
+    return xg, yg
+    #TODO precise zero
+
+
+def dpa(I_or_II, diam_cables, cables_array, subparser_type):
+    '''
+    TODO docstring
+    calcolo dpa
+    '''
+    nx = 71
+    xg, yg = centroid(cables_array, subparser_type)
+    x = np.linspace(xg-35, xg+35, nx)
+    y = yg
+    z_array = np.zeros(nx)
+    for i in range(nx):
+        if subparser_type == 'single':
+            z_array[i] = main_single(I_or_II, x[i], y, diam_cables, cables_array)
+        elif subparser_type == 'double':
+            z_array[i] = main_double(I_or_II, x[i], y, diam_cables, cables_array)
+
+    # a True entry in the mask indicates an invalid data
+    z_array = ma.masked_greater(z_array, 3)
+    # a TRUE entry in the inverted mask indicates a VALID data
+    inverted_indices = ~ z_array.mask
+
+    dpa_left_right = np.zeros(2)
+    for i in range(len(inverted_indices)-1):
+        if inverted_indices[i] == True and inverted_indices[i+1] == False:
+            dpa_left_right[0] = xg-x[i]
+        if inverted_indices[i] == False and inverted_indices[i+1] == True:
+            dpa_left_right[1] = x[i]-xg
+    return np.max(dpa_left_right)
