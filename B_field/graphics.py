@@ -10,7 +10,7 @@ def main_graphics(x, y, z_grid, xp, yp, cables_array, subparser_type):
     levels = np.geomspace(z_grid.min(), z_grid.max(), num=20)
     filled_contours = ax.contourf(x, y, z_grid, levels, norm=colors.LogNorm(vmin=z_grid.min(), vmax=z_grid.max()), cmap=plt.cm.inferno, origin='lower')
     line_values = (3, 10, 100)
-    line_contours = ax.contour(filled_contours, levels=line_values, colors='w', origin='lower')
+    line_contours = ax.contour(filled_contours, levels=line_values, colors='b', origin='lower')
     plt.clabel(line_contours, inline=True, fmt='%1.0f', fontsize=8)
 
     ax.set_title('B field isolines')
