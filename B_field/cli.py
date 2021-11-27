@@ -13,7 +13,8 @@ def init_parser():
                             usage='%(prog)s [options] path',
                             description='''Evaluation of effective magnetic induction B in a
                             given point (xp, yp), due to single or double triad of cables.''',
-                            fromfile_prefix_chars='@')
+                            fromfile_prefix_chars='@',
+                            epilog='SINGLE/DOUBLE TRIAD NEEDED. \"OPTIONAL\" ARGUMENT IN ORDER TO EVALUATE SOMETHING.')
     parser.add_argument("-v", "--version", action="version",
                         version=f"{parser.prog} version 0.1.0.dev1")
     return parser
@@ -32,7 +33,7 @@ def init_subparser_single(subparsers):
     single_parser.add_argument('-point', '-p', action='store_true', help='Point estimate of the magnetic induction B in (xp, yp)')
     single_parser.add_argument('-bidim', '-b', action='store_true', help='2D estimate of the magnetic induction B around (xp, yp)')
     single_parser.add_argument('-graph', '-g', action='store_true', help='Graph of the trellis and the point of interest (xp, yp)')
-    single_parser.add_argument('-dpa', '-d', action='store_true', help='Estimate of the DPA (distanza di prima approssimazione) for the given configuration')
+    single_parser.add_argument('-dpa', '-d', type=float, nargs=1, metavar='lim_val', default=0, help='Estimate of the DPA (distanza di prima approssimazione) for the given configuration at \'lim_val\' microTesla')
 
     # POSITIONAL ARGUMENTS
     single_parser.add_argument('xp', type=float, help='Abscissa (m) of the point of interest')
@@ -68,7 +69,7 @@ def init_subparser_double(subparsers):
     double_parser.add_argument('-point', '-p', action='store_true', help='Point estimate of the magnetic induction B in (xp, yp)')
     double_parser.add_argument('-bidim', '-b', action='store_true', help='2D estimate of the magnetic induction B around (xp, yp)')
     double_parser.add_argument('-graph', '-g', action='store_true', help='Graph of the trellis and the point of interest (xp, yp)')
-    double_parser.add_argument('-dpa', '-d', action='store_true', help='Estimate of the DPA (distanza di prima approssimazione) for the given configuration')
+    double_parser.add_argument('-dpa', '-d', type=float, nargs=1, metavar='lim_val', default=0, help='Estimate of the DPA (distanza di prima approssimazione) for the given configuration at \'lim_val\' microTesla')
 
     # POSITIONAL ARGUMENTS
     double_parser.add_argument('xp', type=float, help='Abscissa (m) of the point of interest')
@@ -176,9 +177,8 @@ def main(argv=None):
             main_graphics(single_grid[0], single_grid[1], single_grid[2], xp, yp, cables_array, args.subparser)
 
         if args.dpa:
-            dpa_value = dpa(I, diam_cables, cables_array, args.subparser)
-            print('\nThe value of the DPA (Distanza di Prima Approssimazione) is ', round(dpa_value, 0), ' meters.\n')
-
+            dpa_value = dpa(I, diam_cables, cables_array, args.subparser, args.dpa)
+            print('\nThe value of the DPA (Distanza di Prima Approssimazione) is ', round(dpa_value, 1), ' meters from the cables\' center of gravity abscissa.\n')
 
     if args.subparser == 'double':
         xp, yp, diam_cables, II, cables_array = double_args_packaging(args)
@@ -197,8 +197,8 @@ def main(argv=None):
             main_graphics(double_grid[0], double_grid[1], double_grid[2], xp, yp, cables_array, args.subparser)
 
         if args.dpa:
-            dpa_value = dpa(II, diam_cables, cables_array, args.subparser)
-            print('\nThe value of the DPA (Distanza di Prima Approssimazione) is ', round(dpa_value, 0), ' meters.\n')
+            dpa_value = dpa(II, diam_cables, cables_array, args.subparser, args.dpa)
+            print('\nThe value of the DPA (Distanza di Prima Approssimazione) is ', round(dpa_value, 1), ' meters from the cables\' center of gravity abscissa.\n')
 
 
 #Command line entry point

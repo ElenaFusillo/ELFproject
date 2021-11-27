@@ -250,17 +250,34 @@ def centroid(cables_array, subparser_type):
                 y_sum += cables_array[j, i, 2]
         xg, yg = x_sum/(num_cables*num_triad), y_sum/(num_cables*num_triad)
     return xg, yg
-    #TODO precise zero
 
 
-def dpa(I_or_II, diam_cables, cables_array, subparser_type):
+def dpa(I_or_II, diam_cables, cables_array, subparser_type, lim_val):
     '''
     TODO docstring
-    calcolo dpa
+    calcolo dpa dal centroide della cable configuration
     '''
-    nx = 71
     xg, yg = centroid(cables_array, subparser_type)
-    x = np.linspace(xg-35, xg+35, nx)
+
+    if subparser_type == 'single':
+        for i in range(3):
+            if np.linalg.norm(np.array((cables_array[-1+i, 1], cables_array[-1+i, 2]))-np.array((cables_array[i, 1], cables_array[i, 2]))) < 0.5:
+                nx = 121
+                delta = 6
+            else:
+                nx = 71
+                delta = 35
+    elif subparser_type == 'double':
+        for j in range(2):
+            for i in range(3):
+                if np.linalg.norm(np.array((cables_array[j, -1+i, 1], cables_array[j, -1+i, 2]))-np.array((cables_array[j, i, 1], cables_array[j, i, 2]))) < 0.5:
+                    nx = 121
+                    delta = 6
+                else:
+                    nx = 71
+                    delta = 35
+
+    x = np.linspace(xg-delta, xg+delta, nx)
     y = yg
     z_array = np.zeros(nx)
     for i in range(nx):
@@ -269,15 +286,10 @@ def dpa(I_or_II, diam_cables, cables_array, subparser_type):
         elif subparser_type == 'double':
             z_array[i] = main_double(I_or_II, x[i], y, diam_cables, cables_array)
 
-    # a True entry in the mask indicates an invalid data
-    z_array = ma.masked_greater(z_array, 3)
-    # a TRUE entry in the inverted mask indicates a VALID data
-    inverted_indices = ~ z_array.mask
-
     dpa_left_right = np.zeros(2)
-    for i in range(len(inverted_indices)-1):
-        if inverted_indices[i] == True and inverted_indices[i+1] == False:
+    for i in range(nx-1):
+        if z_array[i] <= lim_val < z_array[i+1]:
             dpa_left_right[0] = xg-x[i]
-        if inverted_indices[i] == False and inverted_indices[i+1] == True:
-            dpa_left_right[1] = x[i]-xg
+        if z_array[i] > lim_val >= z_array[i+1]:
+            dpa_left_right[1] = x[i+1]-xg
     return np.max(dpa_left_right)
