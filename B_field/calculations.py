@@ -1,7 +1,6 @@
 import math
 import cmath
 import numpy as np
-import numpy.ma as ma
 
 #Recall all the constants needed in the program
 PI = math.pi
@@ -230,6 +229,7 @@ def main_grid(I_or_II, xp, yp, diam_cables, cables_array, subparser_type):
 
     return x, y, z_grid
 
+
 def centroid(cables_array, subparser_type):
     '''
     TODO docstring
@@ -252,30 +252,50 @@ def centroid(cables_array, subparser_type):
     return xg, yg
 
 
+def is_underground(cables_array, subparser_type):
+    '''
+    TODO docstring
+    check if the cables' configuration is underground, that is: the cables are extremely close to each other (i.e. 0.5m)
+    in case, set the linspace parameters
+
+    '''
+    if subparser_type == 'single':
+        for i in range(3):
+            if np.linalg.norm(np.array((cables_array[i-1, 1], cables_array[i-1, 2]))-np.array((cables_array[i, 1], cables_array[i, 2]))) < 0.5:
+                delta, nx = 6, 121
+            else:
+                delta, nx = 35, 71
+    elif subparser_type == 'double':
+        for j in range(2):
+            for i in range(3):
+                if np.linalg.norm(np.array((cables_array[j, i-1, 1], cables_array[j, i-1, 2]))-np.array((cables_array[j, i, 1], cables_array[j, i, 2]))) < 0.5:
+                    delta, nx = 6, 121
+                else:
+                    delta, nx = 35, 71
+    return delta, nx
+
+
+def lim_val_checker(xg, x, nx, z_array, lim_val):
+    '''
+    TODO docstring
+    '''
+
+    dpa_left_right = np.zeros(2)
+    for i in range(nx-1):
+        if z_array[i] <= lim_val < z_array[i+1]:
+            dpa_left_right[0] = xg-x[i]
+        if z_array[i] > lim_val >= z_array[i+1]:
+            dpa_left_right[1] = x[i+1]-xg
+    return np.max(dpa_left_right)
+
+
 def dpa(I_or_II, diam_cables, cables_array, subparser_type, lim_val):
     '''
     TODO docstring
     calcolo dpa dal centroide della cable configuration
     '''
     xg, yg = centroid(cables_array, subparser_type)
-
-    if subparser_type == 'single':
-        for i in range(3):
-            if np.linalg.norm(np.array((cables_array[-1+i, 1], cables_array[-1+i, 2]))-np.array((cables_array[i, 1], cables_array[i, 2]))) < 0.5:
-                nx = 121
-                delta = 6
-            else:
-                nx = 71
-                delta = 35
-    elif subparser_type == 'double':
-        for j in range(2):
-            for i in range(3):
-                if np.linalg.norm(np.array((cables_array[j, -1+i, 1], cables_array[j, -1+i, 2]))-np.array((cables_array[j, i, 1], cables_array[j, i, 2]))) < 0.5:
-                    nx = 121
-                    delta = 6
-                else:
-                    nx = 71
-                    delta = 35
+    delta, nx = is_underground(cables_array, subparser_type)
 
     x = np.linspace(xg-delta, xg+delta, nx)
     y = yg
@@ -286,10 +306,6 @@ def dpa(I_or_II, diam_cables, cables_array, subparser_type, lim_val):
         elif subparser_type == 'double':
             z_array[i] = main_double(I_or_II, x[i], y, diam_cables, cables_array)
 
-    dpa_left_right = np.zeros(2)
-    for i in range(nx-1):
-        if z_array[i] <= lim_val < z_array[i+1]:
-            dpa_left_right[0] = xg-x[i]
-        if z_array[i] > lim_val >= z_array[i+1]:
-            dpa_left_right[1] = x[i+1]-xg
-    return np.max(dpa_left_right)
+    dpa_value = lim_val_checker(xg, x, nx, z_array, lim_val)
+
+    return dpa_value
