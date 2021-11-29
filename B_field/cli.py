@@ -7,7 +7,12 @@ from .graphics import main_graphics
 
 def init_parser():
     '''
-    Initialization of the argument parser.
+    Initialization of the argument parser. Version as optional argument.
+
+    Returns
+    -------------------
+    parser : argparse.ArgumentParser
+        An instance of a command line arguments parser.
     '''
     parser = ArgumentParser(prog='B_field',
                             usage='%(prog)s [options] path',
@@ -23,9 +28,18 @@ def init_parser():
 
 def init_subparser_single(subparsers):
     '''
-    Initialization of the subparser "single".
-    '''
+    Initialization of the subparser "single". Optional and positional arguments are listed in order of entry on the command line.
 
+    Parameters
+    -------------------
+    subparsers : argparse._SubParsersAction
+        A subparser action, it will be populated with a subparser instance.
+
+    Returns
+    -------------------
+    single_parser : argparse.ArgumentParser
+        An instance of a command line arguments parser (subparser in this specific case).
+    '''
     #Single triad
     single_parser = subparsers.add_parser('single', help='Calculate the magnetic induction B or the DPA for a single triad of cables',
                                           description='''Positional arguments can be given either manually one by one or using a configuration file (prefix character: @).
@@ -61,7 +75,17 @@ def init_subparser_single(subparsers):
 
 def init_subparser_double(subparsers):
     '''
-    Initialization of the subparser "double".
+    Initialization of the subparser "double". Optional and positional arguments are listed in order of entry on the command line.
+
+    Parameters
+    -------------------
+    subparsers : argparse._SubParsersAction
+        A subparser action, it will be populated with a subparser instance.
+
+    Returns
+    -------------------
+    double_parser : argparse.ArgumentParser
+        An instance of a command line arguments parser (subparser in this specific case).
     '''
 
     #Double triad
@@ -115,10 +139,29 @@ def init_subparser_double(subparsers):
 
 def single_args_packaging(args):
     '''
-    Packaging of the arguments for a single triad in the wanted fashion.
+    Packaging of the arguments for a single triad in the wanted fashion. The cables' diameter is transformed from millimeters to meters.
+
+    Parameters
+    -------------------
+    args : argparse.Namespace
+        Namespace object built up from attributes parsed out of the command line.
+
+    Returns
+    -------------------
+    xp, yp, diam_cables : float
+        Abscissa (m) and ordinate (m) of the point of interest.
+        Cables' diameter (mm).
+
+    I, cables_array : numpy.ndarray
+        Current (A) flowing inside the power line.
+        Array containing the phases (deg), abscissas (m) and ordinates (m) of the cables.
+    
+    Notes
+    -------------------
+    NaN values are used in order to mantain the overall numpy array structure similar to the double triad's one, thus exploiting the same "for" cycles.
+    NaNs are preferable to zeros since in the visualization algorithm NaN values are not plotted automatically.
     '''
     xp, yp = args.xp, args.yp
-    #diameter: from millimeters to meters
     diam_cables = args.diam_cables*0.001
     I = np.array([args.I, np.nan])
     cables_array = np.array([[[args.ph_1_deg, args.x1, args.y1],
@@ -133,10 +176,24 @@ def single_args_packaging(args):
 
 def double_args_packaging(args):
     '''
-    Packaging of the arguments for a double triad in the wanted fashion.
+    Packaging of the arguments for a double triad in the wanted fashion. The cables' diameter is transformed from millimeters to meters.
+
+    Parameters
+    -------------------
+    args : argparse.Namespace
+        Namespace object built up from attributes parsed out of the command line.
+
+    Returns
+    -------------------
+    xp, yp, diam_cables : float
+        Abscissa (m) and ordinate (m) of the point of interest.
+        Cables' diameter (mm).
+
+    II, cables_array : numpy.ndarray
+        Currents (A) flowing inside the power lines.
+        Array containing the phases (deg), abscissas (m) and ordinates (m) of the cables.
     '''
     xp, yp = args.xp, args.yp
-    #diameter: from millimeters to meters
     diam_cables = args.diam_cables*0.001
     II = np.array([args.A_I, args.B_I])
     cables_array = np.array([[[args.A_ph_1_deg, args.A_x1, args.A_y1],
@@ -159,8 +216,12 @@ def main(argv=None):
     Depending on the option selected, data are packed in numpy arrays of different
     fashion and the corresponding calculation functions are called.
 
-    The result is the effective magnetic induction field B (microTesla) generated
-    by the power line/lines calculated in the given point.
+    The result are:
+
+    - point : the point estimate of the magnetic induction B in (xp, yp);
+    - bidim : the 2D estimate of the magnetic induction B around (xp, yp);
+    - graph : graph of the 2D estimate of the magnetic induction B around (xp, yp);
+    - dpa : estimate of the DPA (distanza di prima approssimazione) for the given configuration at \'lim_val\' microTesla. Suggested lim_values: 3, 10.
     '''
     parser = init_parser()
     subparsers = parser.add_subparsers(help='Possible cable configurations', dest='subparser')

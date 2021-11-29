@@ -55,11 +55,12 @@ def plot_poi_cables(x, y, xp, yp, cables_array):
     Parameters
     -------------------
     x, y, cables_array : numpy.ndarray
-        Abscissas (m) and ordinates (m) to plot. Array containing the phases (deg), abscissas (m) and ordinates (m) of the cables.
+        Abscissas (m) and ordinates (m) to plot.
+        Array containing the phases (deg), abscissas (m) and ordinates (m) of the cables.
     xp, yp : float
         Abscissa (m) and ordinate (m) of the point of interest.
     '''
-    print(type(cables_array))
+
     poi, = plt.plot(xp, yp, 'bo')
     plt.legend([poi], ['Point of interest'])
     cables = []
