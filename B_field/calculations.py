@@ -250,7 +250,7 @@ def lim_val_checker(xg, x, nx, z_array, lim_val):
     return np.max(dpa_left_right)
 
 
-def dpa(I_or_II, diam_cables, cables_array, subparser_type, lim_val):
+def main_dpa(I_or_II, diam_cables, cables_array, subparser_type, lim_val):
     '''
     TODO docstring
     calcolo dpa dal centroide della cable configuration
