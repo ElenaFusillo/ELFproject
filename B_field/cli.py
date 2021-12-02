@@ -151,14 +151,13 @@ def single_args_packaging(args):
     xp, yp, diam_cables : float
         Abscissa (m) and ordinate (m) of the point of interest.
         Cables' diameter (mm).
-
     I, cables_array : numpy.ndarray
         Current (A) flowing inside the power line.
         Array containing the phases (deg), abscissas (m) and ordinates (m) of the cables.
     
     Notes
     -------------------
-    NaN values are used in order to mantain the overall numpy array structure similar to the double triad's one, thus exploiting the same "for" cycles.
+    NaN values are used in order to mantain the overall numpy array structure similar to the double triad's one, thus exploiting the same "for" loops.
     NaNs are preferable to zeros since in the visualization algorithm NaN values are not plotted automatically.
     '''
     xp, yp = args.xp, args.yp
@@ -188,7 +187,6 @@ def double_args_packaging(args):
     xp, yp, diam_cables : float
         Abscissa (m) and ordinate (m) of the point of interest.
         Cables' diameter (mm).
-
     II, cables_array : numpy.ndarray
         Currents (A) flowing inside the power lines.
         Array containing the phases (deg), abscissas (m) and ordinates (m) of the cables.

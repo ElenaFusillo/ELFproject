@@ -10,12 +10,22 @@ np.set_printoptions(precision=2, suppress=True)
 
 def which_iterator(subparser_type):
     '''
-    TODO docstring
+    Based on the subparser type, it returns the corresponding iterator useful in "for" loops in the calculation and graphical part.
+
+    Parameters
+    -------------------
+    subparser_type : str
+        Parsed argument, indicating the subparser called in the command line.
+
+    Returns
+    -------------------
+    iter : int
+        Iterator useful in "for" loops.
     '''
     if subparser_type == 'single':
         iter = 1
     elif subparser_type == 'double':
-        iter =2
+        iter = 2
     return iter
 
 
@@ -40,13 +50,13 @@ def calc_B_phasors(I, xp, yp, cable_array):
     xp, yp : float
         Abscissa (m) and ordinate (m) of the point of interest where
         the magnetic induction field B will be calculated at last
-    cable_array : numpy array
+    cable_array : numpy.ndarray
         First column - Current phase belonging to the n-th cable under consideration
         Second and third columns - Abscissa and ordinate of the n-th cable under consideration
 
     Returns
     -------------------
-    B_phasors_n : numpy array 2x2
+    B_phasors_n : numpy.ndarray
         Respectively the real and imaginary part (columns) of the
         x and y components (rows) of the magnetic induction field B
         produced by a single cable in a given point
@@ -96,7 +106,7 @@ def calc_B_effective(*B_phasors):
 
     Parameters
     -------------------
-    *B_phasors : numpy array 2x2
+    *B_phasors : numpy.ndarray
         Respectively the real and imaginary part (columns) of the
         x and y components (rows) of the magnetic induction field B
         produced by a single cable in a given point
@@ -131,18 +141,20 @@ def calc_B_effective(*B_phasors):
     return B_effective_microT
 
 
-
 def main_point(I_or_II, xp, yp, diam_cables, cables_array, subparser_type):
-    """Given two triads of cables (two power lines), the function computes
-    their composed effective magnetic induction B in a given point.
+    """Given one or two triads of cables (i.e. power lines), the function
+    computes the composed effective magnetic induction B in a given point.
 
     The respective phasors of the magnetic induction B of each cable
     are iteratively computed and then composed to obtain the result.
+    In case the point of interest is too close to one of the cables,
+    i.e. inside the 2D space effectively occupied by the cables,
+    a dummy B value of 9999 microTesla is returned.
 
     Parameters
     -------------------
-    II : numpy array
-        Current (A) circulating inside the considered power lines
+    I_or_II : numpy.ndarray
+        Current (A) circulating inside the considered power line/lines
         (each one composed of a triad of cables)
     xp, yp : float
         Abscissa (m) and ordinate (m) of the point of interest where
@@ -162,9 +174,8 @@ def main_point(I_or_II, xp, yp, diam_cables, cables_array, subparser_type):
     radius_cable = diam_cables/2
     B_phasors_cables = np.zeros((2, 3, 2, 2))
     #2 super-sets (two triads), 3 sets (three cables each), 2 row each, 2 columns each
-    
-    iter = which_iterator(subparser_type)
 
+    iter = which_iterator(subparser_type)
     for j in range(iter):
         for i in range(3):
             if np.sum(np.square(point_P - np.array((cables_array[j, i, 1], cables_array[j, i, 2])))) < radius_cable:
@@ -178,9 +189,33 @@ def main_point(I_or_II, xp, yp, diam_cables, cables_array, subparser_type):
 
 def main_grid(I_or_II, xp, yp, diam_cables, cables_array, subparser_type):
     '''
-    TODO docstring
-    Step: 50cm
-    (cables_array[i, 1], cables_array[i, 2])
+    It calculates the B values of a 2D grid centered in the point of interest,
+    with 6m side and 50cm step.
+
+    In case a dummy B values is found, it replaces them with
+    the maximum B value calculated (other than 9999 microTesla).
+
+    Parameters
+    -------------------
+    I_or_II : numpy.ndarray
+        Current (A) circulating inside the considered power line/lines
+        (each one composed of a triad of cables)
+    xp, yp : float
+        Abscissa (m) and ordinate (m) of the point of interest where
+        the magnetic induction field B will be calculated at last
+    diam_cables : float
+        Diameter (m) of the cables in use
+    cable_array : numpy array
+        First column - Current phase belonging to the n-th cable under consideration
+        Second and third columns - Abscissa and ordinate of the n-th cable under consideration
+    subparser_type : str
+        Parsed argument, indicating the subparser called in the command line.
+
+    Returns
+    -------------------
+    x, y, z_grid : numpy.ndarray
+        (1D) Abscissas (m) and ordinates (m) having the point of interest in their center.
+        (2D) B values corresponding to the (x,y) couples.
     '''
     nx, ny = 13, 13
     x = np.linspace(xp-3, xp+3, nx)
@@ -193,23 +228,32 @@ def main_grid(I_or_II, xp, yp, diam_cables, cables_array, subparser_type):
         for j in range(ny):
             z_grid[j, i] = main_point(I_or_II, X[0, i], Y[j, 0], diam_cables, cables_array, subparser_type)
 
-    #if there are any dummy values, replace them with the max B value calculated
     index_dummy = np.where(z_grid == 9999)
     z_grid[index_dummy] = np.unique(z_grid)[-2]
-
     return x, y, z_grid
 
 
 def centroid(cables_array, subparser_type):
     '''
-    TODO docstring
-    costruzione baricentro geometrico
+    It calculates the abscissa (m) and ordinate (m) of the cables' center of gravity.
+
+    Parameters
+    -------------------
+    cable_array : numpy array
+        First column - Current phase belonging to the n-th cable under consideration
+        Second and third columns - Abscissa and ordinate of the n-th cable under consideration
+    subparser_type : str
+        Parsed argument, indicating the subparser called in the command line.
+
+    Returns
+    -------------------
+    xg, yg : float
+        Abscissa (m) and ordinate (m) of the cables' center of gravity
     '''
     x_sum, y_sum = 0, 0
     num_cables = 3
 
     iter = which_iterator(subparser_type)
-
     for j in range(iter):
         for i in range(num_cables):
             x_sum += cables_array[j, i, 1]
@@ -220,13 +264,25 @@ def centroid(cables_array, subparser_type):
 
 def is_underground(cables_array, subparser_type):
     '''
-    TODO docstring
-    check if the cables' configuration is underground, that is: the cables are extremely close to each other (i.e. 0.5m)
-    in case, set the linspace parameters
+    It checks if the cables' configuration is underground, that is: the cables are extremely close to each other (i.e. 0.5 meters)
+    In case, sets the parameters of the space subdivision operated through the "linspace" function.
 
+    Parameters
+    -------------------
+    cable_array : numpy array
+        First column - Current phase belonging to the n-th cable under consideration
+        Second and third columns - Abscissa and ordinate of the n-th cable under consideration
+    subparser_type : str
+        Parsed argument, indicating the subparser called in the command line.
+
+    Returns
+    -------------------
+    delta, nx : int
+        The unilateral distance (m) that will be used along x and y axis to investigate the surrounding of the point of interest.
+        Number of intervals into which the bilateral distances to investigate (having xp, yp as the middle point) will be divided.
     '''
-    iter = which_iterator(subparser_type)
 
+    iter = which_iterator(subparser_type)
     for j in range(iter):
         for i in range(3):
             if np.linalg.norm(np.array((cables_array[j, i-1, 1], cables_array[j, i-1, 2]))-np.array((cables_array[j, i, 1], cables_array[j, i, 2]))) < 0.5:
@@ -238,22 +294,60 @@ def is_underground(cables_array, subparser_type):
 
 def lim_val_checker(xg, x, nx, z_array, lim_val):
     '''
-    TODO docstring
+    It checks on both sides of the trellis at which abscissa (m) the given limit value (microTesla) is exceeded.
+    The ordinate (m) at which the computation is done is fixed and it corresponds to yg, the cables' center of gravity.
+
+    Parameters
+    -------------------
+    xg : float
+        Abscissa (m) of the cables' center of gravity
+    x, z_array : numpy.ndarray
+        (1D) Abscissas (m) having the cables' center of gravity xg in their center and (1D) B values corresponding to the (x,yg) couples
+    nx : int
+        Number of intervals into which the bilateral distances to investigate (having xg, yg as the middle point) will be divided
+    lim_val : list of float
+        MicroTesla value at which is estimated the DPA (distanza di prima approssimazione)
+
+    Returns
+    -------------------
+    dpa_value : float
+        Value of the estimated DPA (distanza di prima approssimazione) at the given limit value
     '''
 
     dpa_left_right = np.zeros(2)
     for i in range(nx-1):
-        if z_array[i] <= lim_val < z_array[i+1]:
+        if z_array[i] <= lim_val[0] < z_array[i+1]:
             dpa_left_right[0] = xg-x[i]
-        if z_array[i] > lim_val >= z_array[i+1]:
+        if z_array[i] > lim_val[0] >= z_array[i+1]:
             dpa_left_right[1] = x[i+1]-xg
-    return np.max(dpa_left_right)
+    dpa_value = np.max(dpa_left_right)
+    return dpa_value
 
 
 def main_dpa(I_or_II, diam_cables, cables_array, subparser_type, lim_val):
     '''
-    TODO docstring
-    calcolo dpa dal centroide della cable configuration
+    It calculates the DPA (distanza di prima approssimazione - meters) at the given limit value (microTesla).
+    A single value is provided, meaning a symmetrical DPA with respect to the cables' center of gravity abscissa xg.
+
+    Parameters
+    -------------------
+    I_or_II : numpy.ndarray
+        Current (A) circulating inside the considered power line/lines
+        (each one composed of a triad of cables)
+    diam_cables : float
+        Diameter (m) of the cables in use
+    cable_array : numpy array
+        First column - Current phase belonging to the n-th cable under consideration
+        Second and third columns - Abscissa and ordinate of the n-th cable under consideration
+    subparser_type : str
+        Parsed argument, indicating the subparser called in the command line.
+    lim_val : list of float
+        MicroTesla value at which is estimated the DPA (distanza di prima approssimazione)
+
+    Returns
+    -------------------
+    dpa_value : float
+        Value of the estimated DPA (distanza di prima approssimazione) at the given limit value
     '''
     xg, yg = centroid(cables_array, subparser_type)
     delta, nx = is_underground(cables_array, subparser_type)
@@ -261,11 +355,8 @@ def main_dpa(I_or_II, diam_cables, cables_array, subparser_type, lim_val):
     x = np.linspace(xg-delta, xg+delta, nx)
     y = yg
     z_array = np.zeros(nx)
-
-
     for i in range(nx):
         z_array[i] = main_point(I_or_II, x[i], y, diam_cables, cables_array, subparser_type)
 
     dpa_value = lim_val_checker(xg, x, nx, z_array, lim_val)
-
     return dpa_value
