@@ -150,6 +150,7 @@ def main_point(I_or_II, xp, yp, diam_cables, cables_array, subparser_type):
     In case the point of interest is too close to one of the cables,
     i.e. inside the 2D space effectively occupied by the cables,
     a dummy B value of 9999 microTesla is returned.
+    This is done in order to not nullify the denominator.
 
     Parameters
     -------------------

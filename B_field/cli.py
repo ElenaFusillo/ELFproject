@@ -20,7 +20,7 @@ def init_parser():
                             given point (xp, yp) and the DPA (distanza di prima approssimazione),
                             due to single or double triad of cables.''',
                             fromfile_prefix_chars='@',
-                            epilog='SINGLE/DOUBLE TRIAD NEEDED. \"OPTIONAL\" ARGUMENT IN ORDER TO EVALUATE SOMETHING.')
+                            epilog='SINGLE/DOUBLE TRIAD NEEDED. SINGLE/DOUBLE \"OPTIONAL\" ARGUMENT IN ORDER TO EVALUATE SOMETHING.')
     parser.add_argument("-v", "--version", action="version",
                         version=f"{parser.prog} version 0.1.0.dev3")
     return parser
@@ -218,7 +218,7 @@ def main(argv=None):
 
     - point : the point estimate of the magnetic induction B in (xp, yp);
     - bidim : the 2D estimate of the magnetic induction B around (xp, yp);
-    - graph : graph of the 2D estimate of the magnetic induction B around (xp, yp);
+    - graph : graphical representation of the 2D estimate of the magnetic induction B around (xp, yp);
     - dpa : estimate of the DPA (distanza di prima approssimazione) for the given configuration at \'lim_val\' microTesla. Suggested lim_values: 3, 10.
     '''
     parser = init_parser()
