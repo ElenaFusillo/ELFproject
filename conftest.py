@@ -9,22 +9,26 @@ def eg_input_single_OH():
     '''
     Overhead configuration A1 - single triad - INPUT
     '''
-    current = 870
+    current = np.array([870, np.nan])
     xp = -20.5
     yp = 1
-    cable_array = np.array([[330, -3.75, 6.3], [210, 3.2, 8.3], [90, -3.05, 10.3]])
-    return current, xp, yp, cable_array
+    diam_cables = 31.5*0.001
+    cables_array = np.array([[[330, -3.75, 6.3], [210, 3.2, 8.3], [90, -3.05, 10.3]],
+                            [[np.nan, np.nan, np.nan], [np.nan, np.nan, np.nan], [np.nan, np.nan, np.nan]]])
+    subparser_type = 'single'
+    return current, xp, yp, diam_cables, cables_array, subparser_type
 
 @fixture
 def eg_input_single_OH_conf_file():
     '''
     Overhead configuration A1 - single triad - INPUT
     '''
-    file_content, args_list  = [], ['single']
+    file_content, args_list = [], ['single']
     with open('./examples/Argom_Bsingle.txt', encoding="utf-8") as conf_file:
         file_content = conf_file.readlines()
         for line in file_content:
             args_list += line.splitlines()
+    args_list.append('-point')
     return args_list
 
 @fixture
@@ -40,11 +44,14 @@ def eg_input_UG():
     '''
     Underground configuration A14 - single triad - INPUT
     '''
-    current = 1110
+    current = np.array([1110, np.nan])
     xp = 5.1
     yp = -1.5
-    cable_array = np.array([[330, -0.2, -1.5], [210, 0, -1.5], [90, 0.2, -1.5]])
-    return current, xp, yp, cable_array
+    diam_cables = 108*0.001
+    cables_array = np.array([[[330, -0.2, -1.5], [210, 0, -1.5], [90, 0.2, -1.5]],
+                            [[np.nan, np.nan, np.nan], [np.nan, np.nan, np.nan], [np.nan, np.nan, np.nan]]])
+    subparser_type = 'single'
+    return current, xp, yp, diam_cables, cables_array, subparser_type
 
 @fixture
 def eg_output_B_phasors_UG():
@@ -78,8 +85,8 @@ def eg_input_double_OH():
     Overhead configuration A9 - double triad - INPUT
     '''
     currents = np.array([870, 870])
-    xp = -5
-    yp = 1
+    xp, yp = -5, 1
+    diam_cables = 31.5*0.001
     cables_array = np.array([[[330, -4.0, 6.3],
                               [210, -3.6, 11.6],
                               [90, -3.2, 16.3]],
@@ -87,18 +94,20 @@ def eg_input_double_OH():
                              [[330, 4.0, 6.3],
                               [210, 3.6, 11.6],
                               [90, 3.2, 16.3]]])
-    return currents, xp, yp, cables_array
+    subparser_type = 'double'
+    return currents, xp, yp, diam_cables, cables_array, subparser_type
 
 @fixture
 def eg_input_double_OH_conf_file():
     '''
     Overhead configuration A9 - double triad - INPUT
     '''
-    file_content, args_list  = [], ['double']
+    file_content, args_list = [], ['double']
     with open('./examples/Argom_Bdouble.txt', encoding="utf-8") as conf_file:
         file_content = conf_file.readlines()
         for line in file_content:
             args_list += line.splitlines()
+    args_list.append('-point')
     return args_list
 
 @fixture

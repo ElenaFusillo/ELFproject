@@ -239,16 +239,16 @@ In order to perform the tests, it is just necessary to invoke the _pytest_ modul
 
 ```bash
 pytest
-============================= test session starts =============================
-platform win32 -- Python 3.9.7, pytest-6.2.5, py-1.10.0, pluggy-1.0.0
-rootdir: C:\Users\Elena\Documents\ELFproject
-plugins: hypothesis-6.24.0
-collected 8 items
+=============================================== test session starts ================================================
+platform win32 -- Python 3.7.4, pytest-5.2.1, py-1.8.0, pluggy-0.13.0
+rootdir: C:\Users\Elena\Documents\UNIVERSITA\3_Software_and_Computing_for_Applied_Physics\ELFproject
+plugins: arraydiff-0.3, doctestplus-0.4.0, openfiles-0.4.0, remotedata-0.3.2
+collected 16 items
 
-test_calculations.py ......                                              [ 75%]
-test_cli.py ..                                                           [100%]
+test_calculations.py ...........                                                                              [ 68%]
+test_cli.py .....                                                                                             [100%]
 
-============================== 8 passed in 0.05s ==============================
+================================================ 16 passed in 0.30s ================================================
 ```
 
 __TODO__ UPDATE THE TESTS AND CHANGE THIS SECTION
