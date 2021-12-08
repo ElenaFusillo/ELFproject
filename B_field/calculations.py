@@ -19,14 +19,14 @@ def which_iterator(subparser_type):
 
     Returns
     -------------------
-    iter : int
+    iter_triad : int
         Iterator useful in "for" loops.
     '''
     if subparser_type == 'single':
-        iter = 1
+        iter_triad = 1
     elif subparser_type == 'double':
-        iter = 2
-    return iter
+        iter_triad = 2
+    return iter_triad
 
 
 def calc_B_phasors(I, xp, yp, cable_array):
@@ -176,8 +176,8 @@ def main_point(I_or_II, xp, yp, diam_cables, cables_array, subparser_type):
     B_phasors_cables = np.zeros((2, 3, 2, 2))
     #2 super-sets (two triads), 3 sets (three cables each), 2 row each, 2 columns each
 
-    iter = which_iterator(subparser_type)
-    for j in range(iter):
+    iter_triad = which_iterator(subparser_type)
+    for j in range(iter_triad):
         for i in range(3):
             if np.sum(np.square(point_P - np.array((cables_array[j, i, 1], cables_array[j, i, 2])))) < radius_cable:
                 B_dummy = 9999
@@ -254,12 +254,12 @@ def centroid(cables_array, subparser_type):
     x_sum, y_sum = 0, 0
     num_cables = 3
 
-    iter = which_iterator(subparser_type)
-    for j in range(iter):
+    iter_triad = which_iterator(subparser_type)
+    for j in range(iter_triad):
         for i in range(num_cables):
             x_sum += cables_array[j, i, 1]
             y_sum += cables_array[j, i, 2]
-    xg, yg = x_sum/(num_cables*iter), y_sum/(num_cables*iter)
+    xg, yg = x_sum/(num_cables*iter_triad), y_sum/(num_cables*iter_triad)
     return xg, yg
 
 
@@ -283,8 +283,8 @@ def is_underground(cables_array, subparser_type):
         Number of intervals into which the bilateral distances to investigate (having xp, yp as the middle point) will be divided.
     '''
 
-    iter = which_iterator(subparser_type)
-    for j in range(iter):
+    iter_triad = which_iterator(subparser_type)
+    for j in range(iter_triad):
         for i in range(3):
             if np.linalg.norm(np.array((cables_array[j, i-1, 1], cables_array[j, i-1, 2]))-np.array((cables_array[j, i, 1], cables_array[j, i, 2]))) < 0.5:
                 delta, nx = 6, 121
