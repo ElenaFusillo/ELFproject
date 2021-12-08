@@ -1,9 +1,3 @@
-# import numpy as np
-# import hypothesis.strategies as st
-# from hypothesis import given, settings
-
-#import pytest
-
 from B_field import cli
 
 

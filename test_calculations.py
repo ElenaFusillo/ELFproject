@@ -1,7 +1,3 @@
-# import hypothesis.strategies as st
-# from hypothesis import given, settings
-#import pytest
-
 import numpy as np
 from B_field import calculations
 
@@ -68,15 +64,15 @@ def test_main_grid(eg_input_single_OH, eg_output_single_OH, eg_input_UG, eg_outp
     calculated_grid_single_OH = calculations.main_grid(eg_input_single_OH[0], eg_input_single_OH[1], eg_input_single_OH[2], eg_input_single_OH[3], eg_input_single_OH[4], eg_input_single_OH[5])
     calculated_grid_single_UG = calculations.main_grid(eg_input_UG[0], eg_input_UG[1], eg_input_UG[2], eg_input_UG[3], eg_input_UG[4], eg_input_UG[5])
     calculated_grid_double_OH = calculations.main_grid(eg_input_double_OH[0], eg_input_double_OH[1], eg_input_double_OH[2], eg_input_double_OH[3], eg_input_double_OH[4], eg_input_double_OH[5])
-    #assert del single Overhead
-    assert np.allclose(calculated_grid_single_OH[0], eg_output_single_OH[1]) #x array
-    assert np.allclose(calculated_grid_single_OH[1], eg_output_single_OH[2]) #y array
-    assert np.allclose(calculated_grid_single_OH[2], eg_output_single_OH[3], rtol=1e-02) # z_grid
-    #asser del single Underground
+    #assert Single Overhead
+    assert np.allclose(calculated_grid_single_OH[0], eg_output_single_OH[1])
+    assert np.allclose(calculated_grid_single_OH[1], eg_output_single_OH[2])
+    assert np.allclose(calculated_grid_single_OH[2], eg_output_single_OH[3], rtol=1e-02)
+    #assert Single Underground
     assert np.allclose(calculated_grid_single_UG[0], eg_output_UG[1])
     assert np.allclose(calculated_grid_single_UG[1], eg_output_UG[2])
     assert np.allclose(calculated_grid_single_UG[2], eg_output_UG[3], rtol=1e-02)
-    #asser del double Overhead
+    #assert Double Overhead
     assert np.allclose(calculated_grid_double_OH[0], eg_output_double_OH[1])
     assert np.allclose(calculated_grid_double_OH[1], eg_output_double_OH[2])
     assert np.allclose(calculated_grid_double_OH[2], eg_output_double_OH[3], rtol=1e-02)
