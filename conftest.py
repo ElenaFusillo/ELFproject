@@ -19,17 +19,30 @@ def eg_input_single_OH():
     return current, xp, yp, diam_cables, cables_array, subparser_type
 
 @fixture
-def eg_input_single_OH_conf_file():
+def eg_input_single_conf_file():
     '''
-    Overhead configuration A1 - single triad - INPUT
+    Overhead configuration A1 - single triad - INPUT (-point -bidim -dpa 3)
     '''
     file_content, args_list = [], ['single']
     with open('./examples/Argom_Bsingle.txt', encoding="utf-8") as conf_file:
         file_content = conf_file.readlines()
         for line in file_content:
             args_list += line.splitlines()
-    args_list.append('-point')
+    optional_arguments = ['-point', '-bidim', '-dpa', '3']
+    args_list.extend(optional_arguments)
     return args_list
+
+@fixture
+def eg_output_single_point_bidim_dpa():
+    '''
+    Overhead configuration A1 - single triad - OUTPUT (-point -bidim -dpa 3)
+    '''
+    file_content, output_string = [], ''
+    with open('./examples/Single_output.txt', encoding="utf-8") as output_file:
+        file_content = output_file.readlines()
+        for line in file_content:
+            output_string += line
+    return output_string
 
 @fixture
 def eg_output_B_phasors_OH():
@@ -98,17 +111,30 @@ def eg_input_double_OH():
     return currents, xp, yp, diam_cables, cables_array, subparser_type
 
 @fixture
-def eg_input_double_OH_conf_file():
+def eg_input_double_conf_file():
     '''
-    Overhead configuration A9 - double triad - INPUT
+    Overhead configuration A9 - double triad - INPUT (-point -bidim -dpa 3)
     '''
     file_content, args_list = [], ['double']
     with open('./examples/Argom_Bdouble.txt', encoding="utf-8") as conf_file:
         file_content = conf_file.readlines()
         for line in file_content:
             args_list += line.splitlines()
-    args_list.append('-point')
+    optional_arguments = ['-point', '-bidim', '-dpa', '3']
+    args_list.extend(optional_arguments)
     return args_list
+
+@fixture
+def eg_output_double_point_bidim_dpa():
+    '''
+    Overhead configuration A9 - double triad - OUTPUT (-point -bidim -dpa 3)
+    '''
+    file_content, output_string = [], ''
+    with open('./examples/Double_output.txt', encoding="utf-8") as output_file:
+        file_content = output_file.readlines()
+        for line in file_content:
+            output_string += line
+    return output_string
 
 @fixture
 def eg_input_B_eff_double_OH():
