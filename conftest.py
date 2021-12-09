@@ -1,6 +1,7 @@
 # This file contains all the fixtures needed for the tests.
 # In such way, it is possible to use them among multiple files containing tests.
 
+from numpy.lib.ufunclike import fix
 from pytest import fixture
 import numpy as np
 
@@ -105,7 +106,8 @@ def eg_output_single_OH():
                        [2.42, 2.53, 2.64, 2.76, 2.89, 3.03, 3.18, 3.34, 3.51, 3.69, 3.89, 4.11, 4.35],
                        [2.44, 2.55, 2.67, 2.79, 2.92, 3.06, 3.22, 3.38, 3.56, 3.75, 3.95, 4.18, 4.42],
                        [2.46, 2.57, 2.69, 2.82, 2.95, 3.10, 3.25, 3.42, 3.60, 3.80, 4.01, 4.24, 4.49]])
-    return B_eff, x, y, z_grid
+    xg, yg = -1.2, 8.3
+    return B_eff, x, y, z_grid, xg, yg
 
 @fixture
 def eg_input_double_OH():
@@ -162,13 +164,6 @@ def eg_input_B_eff_double_OH():
     expected_input_4 = np.array([float(7.32100676e-06), float(-4.22678523e-06), float(-1.24318983e-05), float(7.17755982e-06)]).reshape(2, 2)
     expected_input_5 = np.array([float(-8.66224536e-06), float(-5.00114969e-06), float(7.44953101e-06), float(4.30098874e-06)]).reshape(2, 2)
     expected_input_6 = np.array([float(5.52783254e-22), float(9.02763562e-06), float(-3.08355284e-22), float(-5.03582395e-06)]).reshape(2, 2)
-
-    # expected_input_1 = np.array([float(2.74544045e-05), float(-1.58508078e-05), float(-5.18007633e-06), float(2.99071846e-06)]).reshape(2, 2)
-    # expected_input_2 = np.array([float(-1.39721593e-05), float(-8.06682996e-06), float(1.84537954e-06), float(1.06543037e-06)]).reshape(2, 2)
-    # expected_input_3 = np.array([float(6.86861061e-22), float(1.12172924e-05), float(-8.08071836e-23), float(-1.31968146e-06)]).reshape(2, 2)
-    # expected_input_4 = np.array([float(7.32100676e-06), float(-4.22678523e-06), float(-1.24318983e-05), float(7.17755982e-06)]).reshape(2, 2)
-    # expected_input_5 = np.array([float(-8.57287063e-06), float(-4.94954917e-06), float(6.95534787e-06), float(4.01567196e-06)]).reshape(2, 2)
-    # expected_input_6 = np.array([float(5.40977452e-22), float(8.83483225e-06), float(-2.89935628e-22), float(-4.73500813e-06)]).reshape(2, 2)
     return expected_input_1, expected_input_2, expected_input_3, expected_input_4, expected_input_5, expected_input_6
 
 @fixture
@@ -192,7 +187,8 @@ def eg_output_double_OH():
                        [25.47, 27.34, 29.27, 31.19, 32.96, 34.40, 35.27, 35.31, 34.36, 32.43, 29.69, 26.46, 23.10],
                        [27.93, 30.31, 32.88, 35.56, 38.21, 40.56, 42.20, 42.64, 41.52, 38.77, 34.75, 30.03, 25.16],
                        [30.61, 33.64, 37.06, 40.84, 44.87, 48.82, 52.06, 53.60, 52.48, 48.49, 42.39, 35.38, 28.42]])
-    return B_eff, x, y, z_grid
+    xg, yg = 0.0, 11.0
+    return B_eff, x, y, z_grid, xg, yg
 
 @fixture
 def eg_input_B_eff_UG():
@@ -225,4 +221,5 @@ def eg_output_UG():
                        [9.15, 7.16, 5.66, 4.54, 3.70, 3.06, 2.57, 2.18, 1.87, 1.62, 1.41, 1.25, 1.11],
                        [7.21, 5.91, 4.85, 4.01, 3.34, 2.81, 2.39, 2.05, 1.77, 1.55, 1.36, 1.20, 1.07],
                        [5.73, 4.88, 4.13, 3.50, 2.98, 2.55, 2.20, 1.91, 1.67, 1.46, 1.30, 1.15, 1.03]])
-    return B_eff, x, y, z_grid
+    xg, yg = 0.0, -1.5
+    return B_eff, x, y, z_grid, xg, yg

@@ -78,9 +78,17 @@ def test_main_grid(eg_input_single_OH, eg_output_single_OH, eg_input_UG, eg_outp
     assert np.allclose(calculated_grid_double_OH[2], eg_output_double_OH[3], rtol=1e-02)
 
 
-def test_centroid():
-    #TODO write a test
-    return True
+def test_centroid(eg_input_single_OH, eg_output_single_OH, eg_input_UG, eg_output_UG, eg_input_double_OH, eg_output_double_OH):
+    '''
+    This test verifies that the function centroid, given the proper input
+    of a single or double triad, returns what is expected to.
+    '''
+    calculated_centroid_single_OH = calculations.centroid(eg_input_single_OH[4], eg_input_single_OH[5])
+    calculated_centroid_single_UG = calculations.centroid(eg_input_UG[4], eg_input_UG[5])
+    calculated_centroid_double_OH = calculations.centroid(eg_input_double_OH[4], eg_input_double_OH[5])
+    assert np.allclose(calculated_centroid_single_OH, eg_output_single_OH[4:6])
+    assert np.allclose(calculated_centroid_single_UG, eg_output_UG[4:6])
+    assert np.allclose(calculated_centroid_double_OH, eg_output_double_OH[4:6])
 
 
 def test_is_underground():
