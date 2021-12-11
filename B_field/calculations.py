@@ -319,9 +319,9 @@ def lim_val_checker(xg, x, nx, z_array, lim_val):
 
     dpa_left_right = np.zeros(2)
     for i in range(nx-1):
-        if z_array[i] <= lim_val[0] < z_array[i+1]:
+        if z_array[i] <= lim_val < z_array[i+1]:
             dpa_left_right[0] = xg-x[i]
-        if z_array[i] > lim_val[0] >= z_array[i+1]:
+        if z_array[i] > lim_val >= z_array[i+1]:
             dpa_left_right[1] = x[i+1]-xg
     dpa_value = np.max(dpa_left_right)
     return dpa_value

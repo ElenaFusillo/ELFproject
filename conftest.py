@@ -17,7 +17,8 @@ def eg_input_single_OH():
     cables_array = np.array([[[330, -3.75, 6.3], [210, 3.2, 8.3], [90, -3.05, 10.3]],
                             [[np.nan, np.nan, np.nan], [np.nan, np.nan, np.nan], [np.nan, np.nan, np.nan]]])
     subparser_type = 'single'
-    return current, xp, yp, diam_cables, cables_array, subparser_type
+    lim_val = 3
+    return current, xp, yp, diam_cables, cables_array, subparser_type, lim_val
 
 @fixture
 def eg_input_single_conf_file():
@@ -65,7 +66,8 @@ def eg_input_UG():
     cables_array = np.array([[[330, -0.2, -1.5], [210, 0, -1.5], [90, 0.2, -1.5]],
                             [[np.nan, np.nan, np.nan], [np.nan, np.nan, np.nan], [np.nan, np.nan, np.nan]]])
     subparser_type = 'single'
-    return current, xp, yp, diam_cables, cables_array, subparser_type
+    lim_val = 3
+    return current, xp, yp, diam_cables, cables_array, subparser_type, lim_val
 
 @fixture
 def eg_output_B_phasors_UG():
@@ -107,7 +109,8 @@ def eg_output_single_OH():
                        [2.44, 2.55, 2.67, 2.79, 2.92, 3.06, 3.22, 3.38, 3.56, 3.75, 3.95, 4.18, 4.42],
                        [2.46, 2.57, 2.69, 2.82, 2.95, 3.10, 3.25, 3.42, 3.60, 3.80, 4.01, 4.24, 4.49]])
     xg, yg = -1.2, 8.3
-    return B_eff, x, y, z_grid, xg, yg
+    dpa_value = 21.999999999999996
+    return B_eff, x, y, z_grid, xg, yg, dpa_value
 
 @fixture
 def eg_input_double_OH():
@@ -125,7 +128,8 @@ def eg_input_double_OH():
                               [210, 3.6, 11],
                               [90, 3.2, 15.7]]])
     subparser_type = 'double'
-    return currents, xp, yp, diam_cables, cables_array, subparser_type
+    lim_val = 3
+    return currents, xp, yp, diam_cables, cables_array, subparser_type, lim_val
 
 @fixture
 def eg_input_double_conf_file():
@@ -188,7 +192,8 @@ def eg_output_double_OH():
                        [27.93, 30.31, 32.88, 35.56, 38.21, 40.56, 42.20, 42.64, 41.52, 38.77, 34.75, 30.03, 25.16],
                        [30.61, 33.64, 37.06, 40.84, 44.87, 48.82, 52.06, 53.60, 52.48, 48.49, 42.39, 35.38, 28.42]])
     xg, yg = 0.0, 11.0
-    return B_eff, x, y, z_grid, xg, yg
+    dpa_value = 32.0
+    return B_eff, x, y, z_grid, xg, yg, dpa_value
 
 @fixture
 def eg_input_B_eff_UG():
@@ -222,4 +227,5 @@ def eg_output_UG():
                        [7.21, 5.91, 4.85, 4.01, 3.34, 2.81, 2.39, 2.05, 1.77, 1.55, 1.36, 1.20, 1.07],
                        [5.73, 4.88, 4.13, 3.50, 2.98, 2.55, 2.20, 1.91, 1.67, 1.46, 1.30, 1.15, 1.03]])
     xg, yg = 0.0, -1.5
-    return B_eff, x, y, z_grid, xg, yg
+    dpa_value = 5.100000000000001
+    return B_eff, x, y, z_grid, xg, yg, dpa_value

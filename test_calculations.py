@@ -101,6 +101,15 @@ def test_lim_val_checker():
     return True
 
 
-def test_main_dpa():
-    #TODO write a test
-    return True
+def test_main_dpa(eg_input_single_OH, eg_output_single_OH, eg_input_UG, eg_output_UG, eg_input_double_OH, eg_output_double_OH):
+    '''
+    This test verifies that the function main_dpa, given the proper input
+    of either a single triad OVERHEAD (OH) or UNDERGROUND (UG),
+    or a double triad OVERHEAD (OH), returns what is expected to.
+    '''
+    calculated_dpa_single_OH = calculations.main_dpa(eg_input_single_OH[0], eg_input_single_OH[3], eg_input_single_OH[4], eg_input_single_OH[5], eg_input_single_OH[6])
+    calculated_dpa_single_UG = calculations.main_dpa(eg_input_UG[0], eg_input_UG[3], eg_input_UG[4], eg_input_UG[5], eg_input_UG[6])
+    calculated_dpa_double_OH = calculations.main_dpa(eg_input_double_OH[0], eg_input_double_OH[3], eg_input_double_OH[4], eg_input_double_OH[5], eg_input_double_OH[6])
+    assert np.isclose(calculated_dpa_single_OH, eg_output_single_OH[6])
+    assert np.isclose(calculated_dpa_single_UG, eg_output_UG[6])
+    assert np.isclose(calculated_dpa_double_OH, eg_output_double_OH[6])
