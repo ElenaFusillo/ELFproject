@@ -91,14 +91,32 @@ def test_centroid(eg_input_single_OH, eg_output_single_OH, eg_input_UG, eg_outpu
     assert np.allclose(calculated_centroid_double_OH, eg_output_double_OH[4:6])
 
 
-def test_is_underground():
-    #TODO write a test
-    return True
+def test_is_underground(eg_input_single_OH, eg_output_single_OH, eg_input_UG, eg_output_UG, eg_input_double_OH, eg_output_double_OH):
+    '''
+    This test verifies that the function is_underground, given the proper input
+    of either a single triad OVERHEAD (OH) or UNDERGROUND (UG),
+    or a double triad OVERHEAD (OH), returns what is expected to.
+    '''
+    calculated_is_under_single_OH = calculations.is_underground(eg_input_single_OH[4], eg_input_single_OH[5])
+    calculated_is_under_single_UG = calculations.is_underground(eg_input_UG[4], eg_input_UG[5])
+    calculated_is_under_ouble_OH = calculations.is_underground(eg_input_double_OH[4], eg_input_double_OH[5])
+    assert np.allclose(calculated_is_under_single_OH, eg_output_single_OH[7:9])
+    assert np.allclose(calculated_is_under_single_UG, eg_output_UG[7:9])
+    assert np.allclose(calculated_is_under_ouble_OH, eg_output_double_OH[7:9])
 
 
-def test_lim_val_checker():
-    #TODO write a test
-    return True
+def test_lim_val_checker(eg_output_single_OH, eg_output_UG, eg_output_double_OH):
+    '''
+    This test verifies that the function lim_val_checker, given the proper input
+    of either a single triad OVERHEAD (OH) or UNDERGROUND (UG),
+    or a double triad OVERHEAD (OH), returns what is expected to.
+    '''
+    calculated_lim_check_single_OH = calculations.lim_val_checker(eg_output_single_OH[4], eg_output_single_OH[9], eg_output_single_OH[8], eg_output_single_OH[10], eg_output_single_OH[11])
+    calculated_lim_check_single_UG = calculations.lim_val_checker(eg_output_UG[4], eg_output_UG[9], eg_output_UG[8], eg_output_UG[10], eg_output_UG[11])
+    calculated_lim_check_double_OH = calculations.lim_val_checker(eg_output_double_OH[4], eg_output_double_OH[9], eg_output_double_OH[8], eg_output_double_OH[10], eg_output_double_OH[11])
+    assert np.isclose(calculated_lim_check_single_OH, eg_output_single_OH[6])
+    assert np.isclose(calculated_lim_check_single_UG, eg_output_UG[6])
+    assert np.isclose(calculated_lim_check_double_OH, eg_output_double_OH[6])
 
 
 def test_main_dpa(eg_input_single_OH, eg_output_single_OH, eg_input_UG, eg_output_UG, eg_input_double_OH, eg_output_double_OH):

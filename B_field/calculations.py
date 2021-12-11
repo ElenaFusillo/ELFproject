@@ -281,6 +281,12 @@ def is_underground(cables_array, subparser_type):
     delta, nx : int
         The unilateral distance (m) that will be used along x and y axis to investigate the surrounding of the point of interest.
         Number of intervals into which the bilateral distances to investigate (having xp, yp as the middle point) will be divided.
+
+    Notes
+    -------------------
+    To check if the cables are underground the relative distance is used, instead of just checking the ordinates (that should be negative).
+    This is because, hypothetically, the reference system origin could be put anywhere.
+    For convenience, the documentation strongly recommends where to place this origin.
     '''
 
     iter_triad = which_iterator(subparser_type)
