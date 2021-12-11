@@ -110,7 +110,7 @@ To explore the inputs needed by the subcommands, the command line help can be us
 
 **These inputs are mandatory in number and order. Default configuration files can be found in the config_args folder.**
 
->  _CONFIGURATION FILE EXAMPLE_
+>  _CONFIGURATION FILE EXAMPLE_\
 > -20.5\
 > 1\
 > 31.5\
@@ -123,7 +123,7 @@ To explore the inputs needed by the subcommands, the command line help can be us
 > 8.3\
 > 90\
 > -3.05\
-> 10.3\
+> 10.3
 
 There are two main subcommands, that are:
 - _single_, in case only one triad of cables is considered;
