@@ -110,6 +110,21 @@ To explore the inputs needed by the subcommands, the command line help can be us
 
 **These inputs are mandatory in number and order. Default configuration files can be found in the config_args folder.**
 
+>  _CONFIGURATION FILE EXAMPLE_
+> -20.5\
+> 1\
+> 31.5\
+> 870\
+> 330\
+> -3.75\
+> 6.3\
+> 210\
+> 3.2\
+> 8.3\
+> 90\
+> -3.05\
+> 10.3\
+
 There are two main subcommands, that are:
 - _single_, in case only one triad of cables is considered;
 - _double_, in case a double triad of cables is considered.
@@ -143,21 +158,6 @@ B_field double @<double_arguments.txt> -point -bidim -graph -dpa <lim_val>
 ```
 
 The **@** simbol indicates the input from a configuration file.
-
->  _CONFIGURATION FILE EXAMPLE_
->> -20.5
->> 1
->> 31.5
->> 870
->> 330
->> -3.75
->> 6.3
->> 210
->> 3.2
->> 8.3
->> 90
->> -3.05
->> 10.3
 
 #### Optional arguments
 
