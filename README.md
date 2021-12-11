@@ -144,6 +144,21 @@ B_field double @<double_arguments.txt> -point -bidim -graph -dpa <lim_val>
 
 The **@** simbol indicates the input from a configuration file.
 
+>  _CONFIGURATION FILE EXAMPLE_
+>> -20.5
+>> 1
+>> 31.5
+>> 870
+>> 330
+>> -3.75
+>> 6.3
+>> 210
+>> 3.2
+>> 8.3
+>> 90
+>> -3.05
+>> 10.3
+
 #### Optional arguments
 
 As it can be seen in the previus bash scripts, the command line interface requires also one or more optional arguments. The optional arguments accept a long form and short form, moreover they can be chained together. They are:
