@@ -11,6 +11,7 @@ def test_calc_B_phasors_overhead(eg_input_single_OH, eg_output_B_phasors_OH):
     calculated_B_phasors = calculations.calc_B_phasors(eg_input_single_OH[0][0], eg_input_single_OH[1], eg_input_single_OH[2], eg_input_single_OH[4][0][0])
     assert np.allclose(calculated_B_phasors, eg_output_B_phasors_OH)
 
+
 def test_calc_B_phasors_underground(eg_input_UG, eg_output_B_phasors_UG):
     '''
     This test verifies that the function calc_B_phasors, given the proper input
@@ -54,6 +55,7 @@ def test_main_point(eg_input_single_OH, eg_output_single_OH, eg_input_UG, eg_out
     assert np.isclose(calculated_point_single_OH, eg_output_single_OH[0])
     assert np.isclose(calculated_point_single_UG, eg_output_UG[0])
     assert np.isclose(calculated_point_double_OH, eg_output_double_OH[0])
+
 
 def test_main_grid(eg_input_single_OH, eg_output_single_OH, eg_input_UG, eg_output_UG, eg_input_double_OH, eg_output_double_OH):
     '''

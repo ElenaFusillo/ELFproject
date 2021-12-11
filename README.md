@@ -95,6 +95,7 @@ In order to install the application _B\_field_ you first need to clone the repos
 ```bash
 git clone https://github.com/ElenaFusillo/ELFproject
 cd ELFproject
+pip install -r requirements.txt
 pip install --editable B_field
 ```
 
