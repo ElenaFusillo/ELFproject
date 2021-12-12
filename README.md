@@ -96,7 +96,7 @@ In order to install the application _B\_field_ you first need to clone the repos
 git clone https://github.com/ElenaFusillo/ELFproject
 cd ELFproject
 pip install -r requirements.txt
-pip install --editable B_field
+pip install B_field
 ```
 
 All the code in this readme must be executed inside a python environment, thus it could be necessary to add `py -m` or `python -m` before the instructions shown.

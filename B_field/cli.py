@@ -20,7 +20,7 @@ def init_parser():
                             given point (xp, yp) and the DPA (distanza di prima approssimazione),
                             due to single or double triad of cables.''',
                             fromfile_prefix_chars='@',
-                            epilog='SINGLE/DOUBLE TRIAD NEEDED. SINGLE/DOUBLE \"OPTIONAL\" ARGUMENT IN ORDER TO EVALUATE SOMETHING.')
+                            epilog='SINGLE/DOUBLE TRIAD NEEDED. SINGLE/DOUBLE \"OPTIONAL\" ARGUMENT IN ORDER TO EVALUATE SOMETHING.\n')
     parser.add_argument("-v", "--version", action="version",
                         version=f"{parser.prog} version 0.1.0.dev3")
     return parser
