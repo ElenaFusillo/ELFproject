@@ -41,7 +41,7 @@ def test_main_point(eg_input_single_OH, eg_output_single_OH, eg_input_UG, eg_out
     '''
     Tests:
     main_point function output
-    
+
     Given:
     single triad OVERHEAD (OH)
     singe triad UNDERGROUND (UG)
@@ -86,7 +86,7 @@ def test_centroid(eg_input_single_OH, eg_output_single_OH, eg_input_UG, eg_outpu
     '''
     Tests:
     centroid function output
-    
+
     Given:
     single triad OVERHEAD (OH)
     single triad UNDERGROUND (UG)
@@ -104,7 +104,7 @@ def test_is_underground(eg_input_single_OH, eg_output_single_OH, eg_input_UG, eg
     '''
     Tests:
     is_underground function output
-    
+
     Given:
     single triad OVERHEAD (OH)
     single triad UNDERGROUND (UG)
@@ -122,7 +122,7 @@ def test_lim_val_checker(eg_output_single_OH, eg_output_UG, eg_output_double_OH)
     '''
     Tests:
     lim_val_checker function output
-    
+
     Given:
     single triad OVERHEAD (OH)
     single triad UNDERGROUND (UG)
@@ -140,7 +140,7 @@ def test_main_dpa(eg_input_single_OH, eg_output_single_OH, eg_input_UG, eg_outpu
     '''
     Tests:
     main_dpa function output
-    
+
     Given:
     single triad OVERHEAD (OH) - optional arguments: -dpa 3
     single triad UNDERGROUND (UG) - optional arguments: -dpa 3

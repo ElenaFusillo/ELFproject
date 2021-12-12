@@ -50,7 +50,7 @@ def init_subparser_single(subparsers):
     single_parser.add_argument('-bidim', '-b', action='store_true', help='2D estimate of the magnetic induction B around (xp, yp)')
     single_parser.add_argument('-graph', '-g', action='store_true', help='Graph of the 2D estimate of the magnetic induction B around (xp, yp)')
     single_parser.add_argument('-dpa', '-d', type=float, nargs=1, metavar='lim_val', default=0, help='''Estimate of the DPA (distanza di prima approssimazione)
-                                                                        for the given configuration at \'lim_val\' microTesla. Suggested lim_values: 3, 10''')
+                                                                          for the given configuration at \'lim_val\' microTesla. Suggested lim_values: 3, 10''')
 
     # POSITIONAL ARGUMENTS
     single_parser.add_argument('xp', type=float, help='Abscissa (m) of the point of interest')
@@ -98,7 +98,7 @@ def init_subparser_double(subparsers):
     double_parser.add_argument('-bidim', '-b', action='store_true', help='2D estimate of the magnetic induction B around (xp, yp)')
     double_parser.add_argument('-graph', '-g', action='store_true', help='Graph of the 2D estimate of the magnetic induction B around (xp, yp)')
     double_parser.add_argument('-dpa', '-d', type=float, nargs=1, metavar='lim_val', default=0, help='''Estimate of the DPA (distanza di prima approssimazione)
-                                                                        for the given configuration at \'lim_val\' microTesla. Suggested lim_values: 3, 10''')
+                                                                          for the given configuration at \'lim_val\' microTesla. Suggested lim_values: 3, 10''')
 
     # POSITIONAL ARGUMENTS
     double_parser.add_argument('xp', type=float, help='Abscissa (m) of the point of interest')
@@ -154,7 +154,7 @@ def single_args_packaging(args):
     I, cables_array : numpy.ndarray
         Current (A) flowing inside the power line.
         Array containing the phases (deg), abscissas (m) and ordinates (m) of the cables.
-    
+
     Notes
     -------------------
     NaN values are used in order to mantain the overall numpy array structure similar to the double triad's one, thus exploiting the same "for" loops.
@@ -167,9 +167,9 @@ def single_args_packaging(args):
                               [args.ph_2_deg, args.x2, args.y2],
                               [args.ph_3_deg, args.x3, args.y3]],
 
-                              [[np.nan, np.nan, np.nan],
-                               [np.nan, np.nan, np.nan],
-                               [np.nan, np.nan, np.nan]]])
+                             [[np.nan, np.nan, np.nan],
+                              [np.nan, np.nan, np.nan],
+                              [np.nan, np.nan, np.nan]]])
     return xp, yp, diam_cables, I, cables_array
 
 
@@ -232,7 +232,7 @@ def main(argv=None):
         xp, yp, diam_cables, I_or_II, cables_array = single_args_packaging(args)
     elif args.subparser == 'double':
         xp, yp, diam_cables, I_or_II, cables_array = double_args_packaging(args)
-    
+
     if args.point:
         B_point = main_point(I_or_II, xp, yp, diam_cables, cables_array, args.subparser)
         print('\nIn point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_point, 2), ' microTesla.\n')
@@ -241,7 +241,7 @@ def main(argv=None):
         B_grid = main_grid(I_or_II, xp, yp, diam_cables, cables_array, args.subparser)
         print('''\n------Grid of B field values (microTesla)------\n----Point of interest in the matrix center-----\n\n''', np.flipud(B_grid[2]))
         # with the flip up down you see the matrix as if it was a xy grid
-       
+
     if args.graph:
         B_grid = main_grid(I_or_II, xp, yp, diam_cables, cables_array, args.subparser)
         main_graphics(B_grid[0], B_grid[1], B_grid[2], xp, yp, cables_array)
