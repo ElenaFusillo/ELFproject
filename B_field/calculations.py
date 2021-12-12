@@ -1,12 +1,7 @@
-import math
-import cmath
+from math import radians
+from cmath import rect
 import numpy as np
-
-#Recall all the constants needed in the program
-PI = math.pi
-MU_ZERO = 1.25663706212 * 10**(-6)
-
-np.set_printoptions(precision=2, suppress=True)
+from .config import PI, MU_ZERO
 
 def which_iterator(subparser_type):
     '''
@@ -78,8 +73,8 @@ def calc_B_phasors(I, xp, yp, cable_array):
     substations", second edition, 2008-09.
     """
 
-    ph_n_rad = math.radians(cable_array[0])
-    I_complex = cmath.rect(I, ph_n_rad)
+    ph_n_rad = radians(cable_array[0])
+    I_complex = rect(I, ph_n_rad)
     I_components = np.array([I_complex.real, I_complex.imag])
     coef = (MU_ZERO / (2*PI)) / ((xp - cable_array[1])**2 + (yp - cable_array[2])**2)
     transfer_fn_n = np.array([(cable_array[2] - yp) * coef, (xp - cable_array[1]) * coef]).reshape(2, 1)
