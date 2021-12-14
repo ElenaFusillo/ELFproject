@@ -17,7 +17,7 @@ As can be seen via the help in the command line, the arguments' order is slightl
 1. **xp**: Abscissa (m) of the point of interest
 2. **yp**: Ordinate (m) of the point of interest
 3. **diam_cables**: Diameter (mm) of the cables used
-4. **I**: Current (A) - PCSN (Portata in corrente in servizio nominale - i.e. current flowing inside the power line
+4. **current**: Current (A) - PCSN (Portata in corrente in servizio nominale - i.e. current flowing inside the power line
 5. **ph_1_deg**: Initial phase (deg) - cable 1
 6. **x1**: Abscissa (m) of the first cable (1)
 7. **y1**:Ordinate (m) of the first cable (1)
@@ -33,7 +33,7 @@ As can be seen via the help in the command line, the arguments' order is slightl
 1. **xp**: Abscissa (m) of the point of interest
 2. **yp**: Ordinate (m) of the point of interest
 3. **diam_cables**: Diameter (mm) of the cables used
-4. **A_I**: Current (A) of triad A - PCSN (Portata in corrente in servizio nominale - i.e. current flowing inside the power line A
+4. **A_current**: Current (A) of triad A - PCSN (Portata in corrente in servizio nominale - i.e. current flowing inside the power line A
 5. **A_ph_1_deg**: Initial phase (deg) - cable 1A
 6. **A_x1**: Abscissa (m) of the first cable (1A)
 7. **A_y1**: Ordinate (m) of the first cable (1A)
@@ -43,7 +43,7 @@ As can be seen via the help in the command line, the arguments' order is slightl
 11. **A_ph_3_deg**: Initial phase (deg) - cable 3A
 12. **A_x3**: Abscissa (m) of the first cable (3A)
 13. **A_y3**: Ordinate (m) of the first cable (3A)
-14. **B_I**: Current (A) of triad B - PCSN (Portata in corrente in servizio nominale - i.e. current flowing inside the power line B
+14. **B_current**: Current (A) of triad B - PCSN (Portata in corrente in servizio nominale - i.e. current flowing inside the power line B
 15. **B_ph_1_deg**: Initial phase (deg) - cable 1B
 16. **B_x1**: Abscissa (m) of the first cable (1B)
 17. **B_y1**: Ordinate (m) of the first cable (1B)

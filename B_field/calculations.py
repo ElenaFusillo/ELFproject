@@ -3,7 +3,8 @@ from cmath import rect
 import numpy as np
 from .config import PI, MU_ZERO
 
-def which_iterator(subparser_type):
+
+def _which_iterator(subparser_type):
     '''
     Based on the subparser type, it returns the corresponding iterator useful in "for" loops in the calculation and graphical part.
 
@@ -24,7 +25,7 @@ def which_iterator(subparser_type):
     return iter_triad
 
 
-def calc_B_phasors(I, xp, yp, cable_array):
+def calc_B_phasors(current, xp, yp, cable_array):
 
     """It calculates the phasors of the x and y components of the
     magnetic induction field B in a given point for a given cable.
@@ -39,7 +40,7 @@ def calc_B_phasors(I, xp, yp, cable_array):
 
     Parameters
     -------------------
-    I : int
+    current : int
         Current (A) circulating inside the considered power line
         (composed of a triad of cables)
     xp, yp : float
@@ -74,7 +75,7 @@ def calc_B_phasors(I, xp, yp, cable_array):
     """
 
     ph_n_rad = radians(cable_array[0])
-    I_complex = rect(I, ph_n_rad)
+    I_complex = rect(current, ph_n_rad)
     I_components = np.array([I_complex.real, I_complex.imag])
     coef = (MU_ZERO / (2*PI)) / ((xp - cable_array[1])**2 + (yp - cable_array[2])**2)
     transfer_fn_n = np.array([(cable_array[2] - yp) * coef, (xp - cable_array[1]) * coef]).reshape(2, 1)
@@ -136,7 +137,7 @@ def calc_B_effective(*B_phasors):
     return B_effective_microT
 
 
-def main_point(I_or_II, xp, yp, diam_cables, cables_array, subparser_type):
+def main_point(current_s, xp, yp, diam_cables, cables_array, subparser_type):
     """Given one or two triads of cables (i.e. power lines), the function
     computes the composed effective magnetic induction B in a given point.
 
@@ -149,7 +150,7 @@ def main_point(I_or_II, xp, yp, diam_cables, cables_array, subparser_type):
 
     Parameters
     -------------------
-    I_or_II : numpy.ndarray
+    current_s : numpy.ndarray
         Current (A) circulating inside the considered power line/lines
         (each one composed of a triad of cables)
     xp, yp : float
@@ -171,19 +172,19 @@ def main_point(I_or_II, xp, yp, diam_cables, cables_array, subparser_type):
     B_phasors_cables = np.zeros((2, 3, 2, 2))
     #2 super-sets (two triads), 3 sets (three cables each), 2 row each, 2 columns each
 
-    iter_triad = which_iterator(subparser_type)
+    iter_triad = _which_iterator(subparser_type)
     for j in range(iter_triad):
         for i in range(3):
             if np.sum(np.square(point_P - np.array((cables_array[j, i, 1], cables_array[j, i, 2])))) < radius_cable:
                 B_dummy = 9999
                 return B_dummy
-            B_phasors_cables[j, i,] = calc_B_phasors(I_or_II[j], xp, yp, cables_array[j, i,])
+            B_phasors_cables[j, i,] = calc_B_phasors(current_s[j], xp, yp, cables_array[j, i,])
     B_eff = calc_B_effective(B_phasors_cables[0, 0, ], B_phasors_cables[0, 1, ], B_phasors_cables[0, 2, ],
                              B_phasors_cables[1, 0, ], B_phasors_cables[1, 1, ], B_phasors_cables[1, 2, ],)
     return B_eff
 
 
-def main_grid(I_or_II, xp, yp, diam_cables, cables_array, subparser_type):
+def main_grid(current_s, xp, yp, diam_cables, cables_array, subparser_type):
     '''
     It calculates the B values of a 2D grid centered in the point of interest,
     with 6m side and 50cm step.
@@ -193,7 +194,7 @@ def main_grid(I_or_II, xp, yp, diam_cables, cables_array, subparser_type):
 
     Parameters
     -------------------
-    I_or_II : numpy.ndarray
+    current_s : numpy.ndarray
         Current (A) circulating inside the considered power line/lines
         (each one composed of a triad of cables)
     xp, yp : float
@@ -222,7 +223,7 @@ def main_grid(I_or_II, xp, yp, diam_cables, cables_array, subparser_type):
 
     for i in range(nx):
         for j in range(ny):
-            z_grid[j, i] = main_point(I_or_II, X[0, i], Y[j, 0], diam_cables, cables_array, subparser_type)
+            z_grid[j, i] = main_point(current_s, X[0, i], Y[j, 0], diam_cables, cables_array, subparser_type)
 
     index_dummy = np.where(z_grid == 9999)
     z_grid[index_dummy] = np.unique(z_grid)[-2]
@@ -248,7 +249,7 @@ def centroid(cables_array, subparser_type):
     '''
     x_sum, y_sum = 0, 0
     num_cables = 3
-    iter_triad = which_iterator(subparser_type)
+    iter_triad = _which_iterator(subparser_type)
 
     for j in range(iter_triad):
         for i in range(num_cables):
@@ -284,7 +285,7 @@ def is_underground(cables_array, subparser_type):
     For convenience, the documentation strongly recommends where to place this origin.
     '''
 
-    iter_triad = which_iterator(subparser_type)
+    iter_triad = _which_iterator(subparser_type)
     num_cables = 3
 
     for j in range(iter_triad):

@@ -134,7 +134,7 @@ There are two main subcommands, that are:
 Inputs can be provided individually:
 
 ```python
-B_field single <xp>, <yp>, <diam_cables>, <I>, <ph_1_deg>, <x1>, <y1>, <ph_2_deg>, <x2>, <y2>, <ph_3_deg>, <x3>, <y3> -point -bidim -graph -dpa <lim_val>
+B_field single <xp>, <yp>, <diam_cables>, <current>, <ph_1_deg>, <x1>, <y1>, <ph_2_deg>, <x2>, <y2>, <ph_3_deg>, <x3>, <y3> -point -bidim -graph -dpa <lim_val>
 ```
 or through a configuration file where all the input needed must be listed in order (as the _--help_ shows):
 
@@ -149,7 +149,7 @@ The **@** simbol indicates the input from a configuration file.
 Similarly to the previous case, inputs can be provided individually:
 
 ```python
-B_field double <xp>, <yp>, <diam_cables>, <A_I>, <A_ph_1_deg>, <A_x1>, <A_y1>, <A_ph_2_deg>, <A_x2>, <A_y2>, <A_ph_3_deg>, <A_x3>, <A_y3>, <B_I>, <B_ph_1_deg>, <B_x1>, <B_y1>, <B_ph_2_deg>, <B_x2>, <B_y2>, <B_ph_3_deg>, <B_x3>, <B_y3> -point -bidim -graph -dpa <lim_val>
+B_field double <xp>, <yp>, <diam_cables>, <A_current>, <A_ph_1_deg>, <A_x1>, <A_y1>, <A_ph_2_deg>, <A_x2>, <A_y2>, <A_ph_3_deg>, <A_x3>, <A_y3>, <B_current>, <B_ph_1_deg>, <B_x1>, <B_y1>, <B_ph_2_deg>, <B_x2>, <B_y2>, <B_ph_3_deg>, <B_x3>, <B_y3> -point -bidim -graph -dpa <lim_val>
 ```
 or through a configuration file where all the input needed must be listed in order (as the _--help_ shows):
 
