@@ -247,14 +247,10 @@ def centroid(cables_array, subparser_type):
     xg, yg : float
         Abscissa (m) and ordinate (m) of the cables' center of gravity
     '''
-    x_sum, y_sum = 0, 0
     num_cables = 3
     iter_triad = _which_iterator(subparser_type)
-
-    for j in range(iter_triad):
-        for i in range(num_cables):
-            x_sum += cables_array[j, i, 1]
-            y_sum += cables_array[j, i, 2]
+    coord_sum = np.nansum(np.sum(cables_array, axis=1), axis=0)
+    x_sum, y_sum = coord_sum[1], coord_sum[2]
     xg, yg = x_sum/(num_cables*iter_triad), y_sum/(num_cables*iter_triad)
     return xg, yg
 
