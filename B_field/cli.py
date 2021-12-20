@@ -4,6 +4,7 @@ import numpy as np
 
 from .calculations import main_point, main_grid, main_dpa
 from .graphics import main_graphics
+from .save_output import save_output_jpg, save_output_txt
 
 def init_parser():
     '''
@@ -51,6 +52,7 @@ def init_subparser_single(subparsers):
     single_parser.add_argument('-graph', '-g', action='store_true', help='Graph of the 2D estimate of the magnetic induction B around (xp, yp)')
     single_parser.add_argument('-dpa', '-d', type=float, nargs=1, metavar='lim_val', default=0, help='''Estimate of the DPA (distanza di prima approssimazione)
                                                                           for the given configuration at \'lim_val\' microTesla. Suggested lim_values: 3, 10''')
+    single_parser.add_argument('-save', '-s', type=str, nargs=2, metavar=('dest', 'name_file'), default=('.', 'example'), help='Save the output in \'dest\' repository, with \'name_file\' denomination')
 
     # POSITIONAL ARGUMENTS
     single_parser.add_argument('xp', type=float, help='Abscissa (m) of the point of interest')
@@ -99,6 +101,7 @@ def init_subparser_double(subparsers):
     double_parser.add_argument('-graph', '-g', action='store_true', help='Graph of the 2D estimate of the magnetic induction B around (xp, yp)')
     double_parser.add_argument('-dpa', '-d', type=float, nargs=1, metavar='lim_val', default=0, help='''Estimate of the DPA (distanza di prima approssimazione)
                                                                           for the given configuration at \'lim_val\' microTesla. Suggested lim_values: 3, 10''')
+    double_parser.add_argument('-save', '-s', type=str, nargs=2, metavar=('dest', 'name_file'), default=('.', 'example'), help='Save the output in \'dest\' repository, with \'name_file\' denomination')
 
     # POSITIONAL ARGUMENTS
     double_parser.add_argument('xp', type=float, help='Abscissa (m) of the point of interest')
@@ -236,19 +239,27 @@ def main(argv=None):
     if args.point:
         B_point = main_point(current_s, xp, yp, diam_cables, cables_array, args.subparser)
         print('\nIn point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_point, 2), ' microTesla.\n')
+        if args.save:
+            save_output_txt(args.save[0], args.save[1], B_point)
 
     if args.bidim:
         B_grid = main_grid(current_s, xp, yp, diam_cables, cables_array, args.subparser)
         print('''\n------Grid of B field values (microTesla)------\n----Point of interest in the matrix center-----\n\n''', np.flipud(B_grid[2]))
         # with the flip up down you see the matrix as if it was a xy grid
+        if args.save:
+            save_output_txt(args.save[0], args.save[1], B_grid)
 
     if args.graph:
         B_grid = main_grid(current_s, xp, yp, diam_cables, cables_array, args.subparser)
-        main_graphics(B_grid[0], B_grid[1], B_grid[2], xp, yp, cables_array)
+        output_figure = main_graphics(B_grid[0], B_grid[1], B_grid[2], xp, yp, cables_array)
+        if args.save:
+            save_output_jpg(args.save[0], args.save[1], output_figure)
 
     if args.dpa:
         dpa_value = main_dpa(current_s, diam_cables, cables_array, args.subparser, args.dpa)
         print('\nThe value of the DPA (Distanza di Prima Approssimazione) is ', round(dpa_value, 1), ' meters from the cables\' center of gravity abscissa.\n')
+        if args.save:
+            save_output_txt(args.save[0], args.save[1], dpa_value)
 
 
 #Command line entry point

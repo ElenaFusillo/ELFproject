@@ -95,3 +95,4 @@ def main_graphics(x, y, z_grid, xp, yp, cables_array):
     plot_poi_cables(x, y, xp, yp, cables_array)
 
     plt.show()
+    return fig

@@ -325,14 +325,14 @@ def lim_val_checker(xg, x, nx, z_array, lim_val):
     return dpa_value
 
 
-def main_dpa(I_or_II, diam_cables, cables_array, subparser_type, lim_val):
+def main_dpa(current_s, diam_cables, cables_array, subparser_type, lim_val):
     '''
     It calculates the DPA (distanza di prima approssimazione - meters) at the given limit value (microTesla).
     A single value is provided, meaning a symmetrical DPA with respect to the cables' center of gravity abscissa xg.
 
     Parameters
     -------------------
-    I_or_II : numpy.ndarray
+    current_s : numpy.ndarray
         Current (A) circulating inside the considered power line/lines
         (each one composed of a triad of cables)
     diam_cables : float
@@ -357,7 +357,7 @@ def main_dpa(I_or_II, diam_cables, cables_array, subparser_type, lim_val):
     y = yg
     z_array = np.zeros(nx)
     for i in range(nx):
-        z_array[i] = main_point(I_or_II, x[i], y, diam_cables, cables_array, subparser_type)
+        z_array[i] = main_point(current_s, x[i], y, diam_cables, cables_array, subparser_type)
 
     dpa_value = lim_val_checker(xg, x, nx, z_array, lim_val)
     return dpa_value
