@@ -50,9 +50,9 @@ def init_subparser_single(subparsers):
     single_parser.add_argument('-point', '-p', action='store_true', help='Point estimate of the magnetic induction B in (xp, yp)')
     single_parser.add_argument('-bidim', '-b', action='store_true', help='2D estimate of the magnetic induction B around (xp, yp)')
     single_parser.add_argument('-graph', '-g', action='store_true', help='Graph of the 2D estimate of the magnetic induction B around (xp, yp)')
-    single_parser.add_argument('-dpa', '-d', type=float, nargs=1, metavar='lim_val', default=0, help='''Estimate of the DPA (distanza di prima approssimazione)
+    single_parser.add_argument('-dpa', '-d', type=float, nargs=1, metavar='lim_val', help='''Estimate of the DPA (distanza di prima approssimazione)
                                                                           for the given configuration at \'lim_val\' microTesla. Suggested lim_values: 3, 10''')
-    single_parser.add_argument('-save', '-s', type=str, nargs=2, metavar=('dest', 'name_file'), default=('.', 'example'), help='Save the output in \'dest\' repository, with \'name_file\' denomination')
+    single_parser.add_argument('-save', '-s', type=str, nargs=2, metavar=('dest', 'name_file'), help='Save the output in \'dest\' repository, with \'name_file\' denomination')
 
     # POSITIONAL ARGUMENTS
     single_parser.add_argument('xp', type=float, help='Abscissa (m) of the point of interest')
@@ -99,9 +99,9 @@ def init_subparser_double(subparsers):
     double_parser.add_argument('-point', '-p', action='store_true', help='Point estimate of the magnetic induction B in (xp, yp)')
     double_parser.add_argument('-bidim', '-b', action='store_true', help='2D estimate of the magnetic induction B around (xp, yp)')
     double_parser.add_argument('-graph', '-g', action='store_true', help='Graph of the 2D estimate of the magnetic induction B around (xp, yp)')
-    double_parser.add_argument('-dpa', '-d', type=float, nargs=1, metavar='lim_val', default=0, help='''Estimate of the DPA (distanza di prima approssimazione)
+    double_parser.add_argument('-dpa', '-d', type=float, nargs=1, metavar='lim_val', help='''Estimate of the DPA (distanza di prima approssimazione)
                                                                           for the given configuration at \'lim_val\' microTesla. Suggested lim_values: 3, 10''')
-    double_parser.add_argument('-save', '-s', type=str, nargs=2, metavar=('dest', 'name_file'), default=('.', 'example'), help='Save the output in \'dest\' repository, with \'name_file\' denomination')
+    double_parser.add_argument('-save', '-s', type=str, nargs=2, metavar=('dest', 'name_file'), help='Save the output in \'dest\' repository, with \'name_file\' denomination')
 
     # POSITIONAL ARGUMENTS
     double_parser.add_argument('xp', type=float, help='Abscissa (m) of the point of interest')
