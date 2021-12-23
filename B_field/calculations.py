@@ -361,3 +361,17 @@ def main_dpa(current_s, diam_cables, cables_array, subparser_type, lim_val):
 
     dpa_value = lim_val_checker(xg, x, nx, z_array, lim_val)
     return dpa_value
+
+def main_print_point(current_s, xp, yp, diam_cables, cables_array, subparser_type):
+    '''TODO docstring'''
+    B_point = main_point(current_s, xp, yp, diam_cables, cables_array, subparser_type)
+    print('\nIn point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_point, 2), ' microTesla.\n')
+
+def main_print_bidim(current_s, xp, yp, diam_cables, cables_array, subparser_type):
+    B_grid = main_grid(current_s, xp, yp, diam_cables, cables_array, subparser_type)
+    print('''\n------Grid of B field values (microTesla)------\n----Point of interest in the matrix center-----\n\n''', np.flipud(B_grid[2]))
+    # with the flip up down you see the matrix as if it was a xy grid
+
+def main_print_dpa(current_s, diam_cables, cables_array, subparser_type, dpa_value):
+    dpa_value = main_dpa(current_s, diam_cables, cables_array, subparser_type, dpa_value)
+    print('\nThe value of the DPA (Distanza di Prima Approssimazione) is ', round(dpa_value, 1), ' meters from the cables\' center of gravity abscissa.\n')

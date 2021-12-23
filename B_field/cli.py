@@ -2,9 +2,9 @@ from argparse import ArgumentParser
 
 import numpy as np
 
-from .calculations import main_point, main_grid, main_dpa
+from .calculations import main_print_point, main_print_bidim, main_print_dpa, main_grid
 from .graphics import main_graphics
-from .save_output import save_output_jpg, save_output_txt
+from .save_output import save_output_jpg, save_output_point_txt, save_output_bidim_txt, save_output_dpa_txt
 
 def init_parser():
     '''
@@ -237,17 +237,14 @@ def main(argv=None):
         xp, yp, diam_cables, current_s, cables_array = double_args_packaging(args)
 
     if args.point:
-        B_point = main_point(current_s, xp, yp, diam_cables, cables_array, args.subparser)
-        print('\nIn point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_point, 2), ' microTesla.\n')
+        main_print_point(current_s, xp, yp, diam_cables, cables_array, args.subparser)
         if args.save:
-            save_output_txt(args.save[0], args.save[1], B_point)
+            save_output_point_txt(args.save[0], args.save[1], current_s, xp, yp, diam_cables, cables_array, args.subparser)
 
     if args.bidim:
-        B_grid = main_grid(current_s, xp, yp, diam_cables, cables_array, args.subparser)
-        print('''\n------Grid of B field values (microTesla)------\n----Point of interest in the matrix center-----\n\n''', np.flipud(B_grid[2]))
-        # with the flip up down you see the matrix as if it was a xy grid
+        main_print_bidim(current_s, xp, yp, diam_cables, cables_array, args.subparser)
         if args.save:
-            save_output_txt(args.save[0], args.save[1], B_grid)
+            save_output_bidim_txt(args.save[0], args.save[1], current_s, xp, yp, diam_cables, cables_array, args.subparser)
 
     if args.graph:
         B_grid = main_grid(current_s, xp, yp, diam_cables, cables_array, args.subparser)
@@ -256,10 +253,9 @@ def main(argv=None):
             save_output_jpg(args.save[0], args.save[1], output_figure)
 
     if args.dpa:
-        dpa_value = main_dpa(current_s, diam_cables, cables_array, args.subparser, args.dpa)
-        print('\nThe value of the DPA (Distanza di Prima Approssimazione) is ', round(dpa_value, 1), ' meters from the cables\' center of gravity abscissa.\n')
+        main_print_dpa(current_s, diam_cables, cables_array, args.subparser, args.dpa)
         if args.save:
-            save_output_txt(args.save[0], args.save[1], dpa_value)
+            save_output_dpa_txt(args.save[0], args.save[1], current_s, diam_cables, cables_array, args.subparser, args.dpa)
 
 
 #Command line entry point
