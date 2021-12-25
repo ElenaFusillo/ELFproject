@@ -2,9 +2,9 @@ from argparse import ArgumentParser
 
 import numpy as np
 
-from .calculations import main_print_point, main_print_bidim, main_print_dpa, main_grid
-from .graphics import main_graphics
-from .save_output import save_output_jpg, save_output_point_txt, save_output_bidim_txt, save_output_dpa_txt
+from .calculations import main_print #main_grid
+# from .graphics import main_graphics
+from .save_output import save_output_jpg, save_output_txt
 
 def init_parser():
     '''
@@ -236,26 +236,11 @@ def main(argv=None):
     elif args.subparser == 'double':
         xp, yp, diam_cables, current_s, cables_array = double_args_packaging(args)
 
-    if args.point:
-        main_print_point(current_s, xp, yp, diam_cables, cables_array, args.subparser)
-        if args.save:
-            save_output_point_txt(args.save[0], args.save[1], current_s, xp, yp, diam_cables, cables_array, args.subparser)
-
-    if args.bidim:
-        main_print_bidim(current_s, xp, yp, diam_cables, cables_array, args.subparser)
-        if args.save:
-            save_output_bidim_txt(args.save[0], args.save[1], current_s, xp, yp, diam_cables, cables_array, args.subparser)
-
-    if args.graph:
-        B_grid = main_grid(current_s, xp, yp, diam_cables, cables_array, args.subparser)
-        output_figure = main_graphics(B_grid[0], B_grid[1], B_grid[2], xp, yp, cables_array)
-        if args.save:
-            save_output_jpg(args.save[0], args.save[1], output_figure)
-
-    if args.dpa:
-        main_print_dpa(current_s, diam_cables, cables_array, args.subparser, args.dpa)
-        if args.save:
-            save_output_dpa_txt(args.save[0], args.save[1], current_s, diam_cables, cables_array, args.subparser, args.dpa)
+    dictionary = vars(args)
+    output_figure = main_print(current_s, xp, yp, diam_cables, cables_array, args.subparser, args.dpa, dictionary)
+    if args.save:
+        save_output_txt(args.save[0], args.save[1], current_s, xp, yp, diam_cables, cables_array, args.subparser, args.dpa, dictionary)
+        save_output_jpg(args.save[0], args.save[1], output_figure)
 
 
 #Command line entry point

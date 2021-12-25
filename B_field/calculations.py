@@ -1,6 +1,7 @@
 from math import radians
 from cmath import rect
 import numpy as np
+from .graphics import main_graphics
 from .config import PI, MU_ZERO
 
 
@@ -362,16 +363,25 @@ def main_dpa(current_s, diam_cables, cables_array, subparser_type, lim_val):
     dpa_value = lim_val_checker(xg, x, nx, z_array, lim_val)
     return dpa_value
 
-def main_print_point(current_s, xp, yp, diam_cables, cables_array, subparser_type):
+def main_print(current_s, xp, yp, diam_cables, cables_array, subparser_type, dpa_value, dictionary, file=None):
     '''TODO docstring'''
-    B_point = main_point(current_s, xp, yp, diam_cables, cables_array, subparser_type)
-    print('\nIn point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_point, 2), ' microTesla.\n')
+    output_figure = None
 
-def main_print_bidim(current_s, xp, yp, diam_cables, cables_array, subparser_type):
-    B_grid = main_grid(current_s, xp, yp, diam_cables, cables_array, subparser_type)
-    print('''\n------Grid of B field values (microTesla)------\n----Point of interest in the matrix center-----\n\n''', np.flipud(B_grid[2]))
-    # with the flip up down you see the matrix as if it was a xy grid
+    if dictionary['point'] == True:
+        B_point = main_point(current_s, xp, yp, diam_cables, cables_array, subparser_type)
+        print('\nIn point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_point, 2), ' microTesla.\n', file=file)
 
-def main_print_dpa(current_s, diam_cables, cables_array, subparser_type, dpa_value):
-    dpa_value = main_dpa(current_s, diam_cables, cables_array, subparser_type, dpa_value)
-    print('\nThe value of the DPA (Distanza di Prima Approssimazione) is ', round(dpa_value, 1), ' meters from the cables\' center of gravity abscissa.\n')
+    if dictionary['bidim'] == True:
+        B_grid = main_grid(current_s, xp, yp, diam_cables, cables_array, subparser_type)
+        print('''\n------Grid of B field values (microTesla)------\n----Point of interest in the matrix center-----\n\n''', np.flipud(B_grid[2]), file=file)
+        # with the flip up down you see the matrix as if it was a xy grid
+
+    if dictionary['graph'] == True:
+        B_grid = main_grid(current_s, xp, yp, diam_cables, cables_array, subparser_type)
+        output_figure = main_graphics(B_grid[0], B_grid[1], B_grid[2], xp, yp, cables_array)
+
+    if dictionary['dpa'] != None:
+        dpa_value = main_dpa(current_s, diam_cables, cables_array, subparser_type, dpa_value)
+        print('\nThe value of the DPA (Distanza di Prima Approssimazione) is ', round(dpa_value, 1), ' meters from the cables\' center of gravity abscissa.\n', file=file)
+    
+    return output_figure
