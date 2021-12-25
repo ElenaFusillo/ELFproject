@@ -1,8 +1,9 @@
-from math import radians
 from cmath import rect
+from math import radians
+
 import numpy as np
-from .graphics import main_graphics
-from .config import PI, MU_ZERO
+
+from .config import MU_ZERO, PI
 
 
 def _which_iterator(subparser_type):
@@ -363,25 +364,46 @@ def main_dpa(current_s, diam_cables, cables_array, subparser_type, lim_val):
     dpa_value = lim_val_checker(xg, x, nx, z_array, lim_val)
     return dpa_value
 
-def main_print(current_s, xp, yp, diam_cables, cables_array, subparser_type, dpa_value, dictionary, file=None):
-    '''TODO docstring'''
-    output_figure = None
 
-    if dictionary['point'] == True:
-        B_point = main_point(current_s, xp, yp, diam_cables, cables_array, subparser_type)
+def main_print_point_bidim_dpa(current_s, xp, yp, diam_cables, cables_array, args, file=None):
+    '''
+    Utility function that groups the calls to 'point', 'bidim' and 'dpa' CL optional arguments and prints the respective output.
+
+    Print's 'file' keyword argument is made explicit so that it can be replaced with the selected destination file
+    in case the "save" CL optional argument is invoked.
+
+    Parameters
+    -------------------
+    current_s : numpy.ndarray
+        Current (A) circulating inside the considered power line/lines
+        (each one composed of a triad of cables)
+    xp, yp : float
+        Abscissa (m) and ordinate (m) of the point of interest where
+        the magnetic induction field B will be calculated at last
+    diam_cables : float
+        Diameter (m) of the cables in use
+    cable_array : numpy array
+        First column - Current phase belonging to the n-th cable under consideration
+        Second and third columns - Abscissa and ordinate of the n-th cable under consideration
+    args : argparse.Namespace
+        Namespace object build up from attributes parsed out of the command line
+    file : opened file, default=None
+        Destination file of all the print statements
+
+    Returns
+    -------------------
+    None
+    '''
+
+    if args.point:
+        B_point = main_point(current_s, xp, yp, diam_cables, cables_array, args.subparser)
         print('\nIn point of coordinates (', xp, ',', yp, '), the magnetic induction is ', round(B_point, 2), ' microTesla.\n', file=file)
 
-    if dictionary['bidim'] == True:
-        B_grid = main_grid(current_s, xp, yp, diam_cables, cables_array, subparser_type)
+    if args.bidim:
+        B_grid = main_grid(current_s, xp, yp, diam_cables, cables_array, args.subparser)
         print('''\n------Grid of B field values (microTesla)------\n----Point of interest in the matrix center-----\n\n''', np.flipud(B_grid[2]), file=file)
         # with the flip up down you see the matrix as if it was a xy grid
 
-    if dictionary['graph'] == True:
-        B_grid = main_grid(current_s, xp, yp, diam_cables, cables_array, subparser_type)
-        output_figure = main_graphics(B_grid[0], B_grid[1], B_grid[2], xp, yp, cables_array)
-
-    if dictionary['dpa'] != None:
-        dpa_value = main_dpa(current_s, diam_cables, cables_array, subparser_type, dpa_value)
+    if args.dpa:
+        dpa_value = main_dpa(current_s, diam_cables, cables_array, args.subparser, args.dpa)
         print('\nThe value of the DPA (Distanza di Prima Approssimazione) is ', round(dpa_value, 1), ' meters from the cables\' center of gravity abscissa.\n', file=file)
-    
-    return output_figure

@@ -1,59 +1,54 @@
-from .calculations import main_print # main_print_point, main_print_bidim, main_print_dpa
+from .calculations import main_print_point_bidim_dpa
 
 
-def full_dest_txt(dest, name_file):
-    '''TODO docstring'''
-    full_destination_txt = dest + '/' + name_file + '.txt'
-    return full_destination_txt
+def save_output_txt(dest, filename, current_s, xp, yp, diam_cables, cables_array, args):
+    '''
+    It saves inside a .txt file the output of the 'point', 'bidim' and 'dpa' CL optional arguments.
+    The file is opened in 'append' mode, i.e. open for writing, appending to the end of file if it already exists.
 
+    Print's 'file' keyword argument is made explicit so that now it is replaced with the selected destination file.
 
-def write_file(full_destination_txt, current_s, xp, yp, diam_cables, cables_array, subparser_type, dpa_value, dictionary):
-    '''TODO docstring'''
+    Parameters
+    -------------------
+    dest, filename : string
+        Destination path and filename where the output will be saved
+    current_s : numpy.ndarray
+        Current (A) circulating inside the considered power line/lines
+        (each one composed of a triad of cables)
+    xp, yp : float
+        Abscissa (m) and ordinate (m) of the point of interest where
+        the magnetic induction field B will be calculated at last
+    diam_cables : float
+        Diameter (m) of the cables in use
+    cable_array : numpy array
+        First column - Current phase belonging to the n-th cable under consideration
+        Second and third columns - Abscissa and ordinate of the n-th cable under consideration
+    args : argparse.Namespace
+        Namespace object build up from attributes parsed out of the command line
+
+    Returns
+    -------------------
+    None
+    '''
+    full_destination_txt = dest + '/' + filename + '.txt'
     with open(full_destination_txt, "a", encoding="utf-8") as output_file:
-        main_print(current_s, xp, yp, diam_cables, cables_array, subparser_type, dpa_value, dictionary, output_file)
-
-def save_output_txt(dest, name_file, current_s, xp, yp, diam_cables, cables_array, subparser_type, dpa_value, dictionary):
-    '''TODO docstring'''
-    full_destination = full_dest_txt(dest, name_file)
-    write_file(full_destination, current_s, xp, yp, diam_cables, cables_array, subparser_type, dpa_value, dictionary)
+        main_print_point_bidim_dpa(current_s, xp, yp, diam_cables, cables_array, args, output_file)
 
 
-# def write_file_point(full_destination_txt, current_s, xp, yp, diam_cables, cables_array, subparser_type):
-#     '''TODO docstring'''
-#     with open(full_destination_txt, "a", encoding="utf-8") as output_file:
-#         main_print_point(current_s, xp, yp, diam_cables, cables_array, subparser_type, file=output_file)
+def save_output_jpg(dest, filename, output_figure):
+    '''
+    It saves inside a .jpg file the output of the 'graph' CL optional arguments.
 
-# def save_output_point_txt(dest, name_file, current_s, xp, yp, diam_cables, cables_array, subparser_type):
-#     '''TODO docstring'''
-#     full_destination = full_dest_txt(dest, name_file)
-#     write_file_point(full_destination, current_s, xp, yp, diam_cables, cables_array, subparser_type)
+    Parameters
+    -------------------
+    dest, filename : string
+        Destination path and filename where the output will be saved
+    output_figure : matplotlib.figure.Figure
+        Plot of the B field values given
 
-
-# def write_file_bidim(full_destination_txt, current_s, xp, yp, diam_cables, cables_array, subparser_type):
-#     with open(full_destination_txt, "a", encoding="utf-8") as output_file:
-#         main_print_bidim(current_s, xp, yp, diam_cables, cables_array, subparser_type, file=output_file)
-
-# def save_output_bidim_txt(dest, name_file, current_s, xp, yp, diam_cables, cables_array, subparser_type):
-#     '''TODO docstring'''
-#     full_destination = full_dest_txt(dest, name_file)
-#     write_file_bidim(full_destination, current_s, xp, yp, diam_cables, cables_array, subparser_type)
-
-
-# def write_file_dpa(full_destination_txt, current_s, diam_cables, cables_array, subparser_type, dpa_value):
-#     with open(full_destination_txt, "a", encoding="utf-8") as output_file:
-#         main_print_dpa(current_s, diam_cables, cables_array, subparser_type, dpa_value, file=output_file)
-
-# def save_output_dpa_txt(dest, name_file, current_s, diam_cables, cables_array, subparser_type, dpa_value):
-#     '''TODO docstring'''
-#     full_destination = full_dest_txt(dest, name_file)
-#     write_file_dpa(full_destination, current_s, diam_cables, cables_array, subparser_type, dpa_value)
-
-
-def full_dest_jpg(dest, name_file):
-    full_destination_jpg = dest + '/' + name_file + '.jpg'
-    return full_destination_jpg
-
-def save_output_jpg(dest, name_file, output_figure):
-    '''TODO docstring'''
-    full_destination_jpg = full_dest_jpg(dest, name_file)
+    Returns
+    -------------------
+    None
+    '''
+    full_destination_jpg = dest + '/' + filename + '.jpg'
     output_figure.savefig(full_destination_jpg)

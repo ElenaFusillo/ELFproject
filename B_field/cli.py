@@ -2,8 +2,8 @@ from argparse import ArgumentParser
 
 import numpy as np
 
-from .calculations import main_print #main_grid
-# from .graphics import main_graphics
+from .calculations import main_print_point_bidim_dpa
+from .graphics import main_graph
 from .save_output import save_output_jpg, save_output_txt
 
 def init_parser():
@@ -52,7 +52,7 @@ def init_subparser_single(subparsers):
     single_parser.add_argument('-graph', '-g', action='store_true', help='Graph of the 2D estimate of the magnetic induction B around (xp, yp)')
     single_parser.add_argument('-dpa', '-d', type=float, nargs=1, metavar='lim_val', help='''Estimate of the DPA (distanza di prima approssimazione)
                                                                           for the given configuration at \'lim_val\' microTesla. Suggested lim_values: 3, 10''')
-    single_parser.add_argument('-save', '-s', type=str, nargs=2, metavar=('dest', 'name_file'), help='Save the output in \'dest\' repository, with \'name_file\' denomination')
+    single_parser.add_argument('-save', '-s', type=str, nargs=2, metavar=('dest', 'filename'), help='Save the output in \'dest\' repository, with \'filename\' denomination')
 
     # POSITIONAL ARGUMENTS
     single_parser.add_argument('xp', type=float, help='Abscissa (m) of the point of interest')
@@ -101,7 +101,7 @@ def init_subparser_double(subparsers):
     double_parser.add_argument('-graph', '-g', action='store_true', help='Graph of the 2D estimate of the magnetic induction B around (xp, yp)')
     double_parser.add_argument('-dpa', '-d', type=float, nargs=1, metavar='lim_val', help='''Estimate of the DPA (distanza di prima approssimazione)
                                                                           for the given configuration at \'lim_val\' microTesla. Suggested lim_values: 3, 10''')
-    double_parser.add_argument('-save', '-s', type=str, nargs=2, metavar=('dest', 'name_file'), help='Save the output in \'dest\' repository, with \'name_file\' denomination')
+    double_parser.add_argument('-save', '-s', type=str, nargs=2, metavar=('dest', 'filename'), help='Save the output in \'dest\' repository, with \'filename\' denomination')
 
     # POSITIONAL ARGUMENTS
     double_parser.add_argument('xp', type=float, help='Abscissa (m) of the point of interest')
@@ -223,24 +223,29 @@ def main(argv=None):
     - bidim : the 2D estimate of the magnetic induction B around (xp, yp);
     - graph : graphical representation of the 2D estimate of the magnetic induction B around (xp, yp);
     - dpa : estimate of the DPA (distanza di prima approssimazione) for the given configuration at \'lim_val\' microTesla. Suggested lim_values: 3, 10.
+
+    With the 'save' optional argument is possible to save the output in a file (respectively: point, bidim, dpa in .txt and graph in .jpg)
     '''
     parser = init_parser()
     subparsers = parser.add_subparsers(help='Possible cable configurations', dest='subparser')
     init_subparser_single(subparsers)
     init_subparser_double(subparsers)
 
-    args = parser.parse_args(argv)
+    args = parser.parse_args(argv) #args is a namespace
 
     if args.subparser == 'single':
         xp, yp, diam_cables, current_s, cables_array = single_args_packaging(args)
     elif args.subparser == 'double':
         xp, yp, diam_cables, current_s, cables_array = double_args_packaging(args)
 
-    dictionary = vars(args)
-    output_figure = main_print(current_s, xp, yp, diam_cables, cables_array, args.subparser, args.dpa, dictionary)
+    main_print_point_bidim_dpa(current_s, xp, yp, diam_cables, cables_array, args)
     if args.save:
-        save_output_txt(args.save[0], args.save[1], current_s, xp, yp, diam_cables, cables_array, args.subparser, args.dpa, dictionary)
-        save_output_jpg(args.save[0], args.save[1], output_figure)
+        save_output_txt(args.save[0], args.save[1], current_s, xp, yp, diam_cables, cables_array, args)
+
+    if args.graph:
+        output_figure = main_graph(current_s, xp, yp, diam_cables, cables_array, args.subparser)
+        if args.save:
+            save_output_jpg(args.save[0], args.save[1], output_figure)
 
 
 #Command line entry point
