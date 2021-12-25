@@ -134,12 +134,12 @@ There are two main subcommands, that are:
 Inputs can be provided individually:
 
 ```python
-B_field single <xp>, <yp>, <diam_cables>, <current>, <ph_1_deg>, <x1>, <y1>, <ph_2_deg>, <x2>, <y2>, <ph_3_deg>, <x3>, <y3> -point -bidim -graph -dpa <lim_val>
+B_field single <xp>, <yp>, <diam_cables>, <current>, <ph_1_deg>, <x1>, <y1>, <ph_2_deg>, <x2>, <y2>, <ph_3_deg>, <x3>, <y3> -point -bidim -graph -dpa <lim_val> -save <dest> <filename>
 ```
 or through a configuration file where all the input needed must be listed in order (as the _--help_ shows):
 
 ```python
-B_field single @<single_arguments.txt> -point -bidim -graph -dpa <lim_val>
+B_field single @<single_arguments.txt> -point -bidim -graph -dpa <lim_val> -save <dest> <filename>
 ```
 
 The **@** simbol indicates the input from a configuration file.
@@ -149,12 +149,12 @@ The **@** simbol indicates the input from a configuration file.
 Similarly to the previous case, inputs can be provided individually:
 
 ```python
-B_field double <xp>, <yp>, <diam_cables>, <A_current>, <A_ph_1_deg>, <A_x1>, <A_y1>, <A_ph_2_deg>, <A_x2>, <A_y2>, <A_ph_3_deg>, <A_x3>, <A_y3>, <B_current>, <B_ph_1_deg>, <B_x1>, <B_y1>, <B_ph_2_deg>, <B_x2>, <B_y2>, <B_ph_3_deg>, <B_x3>, <B_y3> -point -bidim -graph -dpa <lim_val>
+B_field double <xp>, <yp>, <diam_cables>, <A_current>, <A_ph_1_deg>, <A_x1>, <A_y1>, <A_ph_2_deg>, <A_x2>, <A_y2>, <A_ph_3_deg>, <A_x3>, <A_y3>, <B_current>, <B_ph_1_deg>, <B_x1>, <B_y1>, <B_ph_2_deg>, <B_x2>, <B_y2>, <B_ph_3_deg>, <B_x3>, <B_y3> -point -bidim -graph -dpa <lim_val> -save <dest> <filename>
 ```
 or through a configuration file where all the input needed must be listed in order (as the _--help_ shows):
 
 ```python
-B_field double @<double_arguments.txt> -point -bidim -graph -dpa <lim_val>
+B_field double @<double_arguments.txt> -point -bidim -graph -dpa <lim_val> -save <dest> <filename>
 ```
 
 The **@** simbol indicates the input from a configuration file.
@@ -166,7 +166,7 @@ As it can be seen in the previus bash scripts, the command line interface requir
 - _-bidim_ / _-b_ : it calculates the 2D estimate (µT) of the magnetic induction B in a 2D grid having at its center the point of interest (_xp_, _yp_);
 - _-graph_ / _-g_ : it returns a graphical representation of the 2D estimate of the magnetic induction B around (_xp_, _yp_) - i.e. the result of the _-bidim_ optional argument;
 - _-dpa_ lim_val / _-d_ lim_val : it returns the estimate (m) of the DPA (distanza di prima approssimazione) for the given configuration at 'lim_val' µT from the cables' center of gravity abscissa. Suggested lim_values: 3, 10 µT;
-- _-save_ dest filename / _-s_ dest filename : it saves the output of one or more of the previous optional arguments in 'dest' repository, with 'filename' denomination (_point_, _bidim_, _dpa_: .txt file - _graph_: .jpg file).
+- _-save_ dest filename / _-s_ dest filename : it saves the output of one or more of the previous optional arguments in 'dest' repository, with 'filename' denomination (_point_, _bidim_, _dpa_: .txt file / _graph_: .jpg file). If a text file with the same filename given is present in the given destination, the output is _appended_ to the end of the file.
 
 ### Output
 
@@ -260,16 +260,16 @@ In order to perform the tests, it is just necessary to invoke the _pytest_ modul
 
 ```bash
 pytest
-======================================== test session starts ========================================
-platform win32 -- Python 3.7.4, pytest-5.2.1, py-1.8.0, pluggy-0.13.1
-rootdir: C:\Users\Elena\Documents\UNIVERSITA\3_Software_and_Computing_for_Applied_Physics\ELFproject
-plugins: arraydiff-0.3, doctestplus-0.4.0, openfiles-0.4.0, remotedata-0.3.2
-collected 10 items
+======================================== test session starts =======================================
+platform win32 -- Python 3.9.7, pytest-6.2.5, py-1.10.0, pluggy-1.0.0
+rootdir: C:\Users\Elena\Documents\ELFproject
+plugins: hypothesis-6.24.0
+collected 25 items
 
-test_calculations.py ........                                                                  [ 80%]
-test_cli.py ..                                                                                 [100%]
+test_calculations.py .......................                                                  [ 92%]
+test_cli.py ..                                                                                [100%]
 
-======================================== 10 passed in 0.36s ========================================
+======================================== 25 passed in 0.38s ========================================
 ```
 
 ----------------------------
