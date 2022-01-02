@@ -1,5 +1,6 @@
 import numpy as np
-
+from numpy.core.defchararray import equal
+from itertools import permutations
 from B_field import calculations
 
 
@@ -78,20 +79,18 @@ def test_dummy_values(eg_input_UG):
     is_point_dummy = calculations.main_point(eg_input_UG[0], too_close_xp, too_close_yp, eg_input_UG[3], eg_input_UG[4], eg_input_UG[5])
     assert np.isclose(is_point_dummy, dummy_value)
 
-def test_one_cable_radial_symmetry():
+def test_B_axial_symmetry_with_main_point(eg_input_UG):
     '''TODO docstring
-    With only one cable --- radial/circular symmetry'''
-    assert True
-
-def test_two_cables_central_symmetry_point():
-    '''TODO docstring
-    With two cables --- specular symmetry'''
-    assert True
-
-def test_commutative_property_point():
-    '''TODO docstring
-    If I swap the cables (1-2 / 2-1) -- egual result'''
-    assert True
+    Three cables (phases), arranged horizontally. Test if there is axial symmetry with respect to the horizontal and vertical line'''
+    axial_symmetry_points = [(0, 0), (0, -3), (-1.7, -1.5), (1.7, -1.5)]
+    B_values_to_check = np.empty((0))
+    for i in range(4):
+        value_to_append = calculations.main_point(eg_input_UG[0], axial_symmetry_points[i][0], axial_symmetry_points[i][1], eg_input_UG[3], eg_input_UG[4], eg_input_UG[5])
+        B_values_to_check = np.append(B_values_to_check, value_to_append)
+    #horizontal symmetry axis
+    assert np.isclose(B_values_to_check[0], B_values_to_check[1])
+    #vertical symmetry axis
+    assert np.isclose(B_values_to_check[2], B_values_to_check[3])
 
 def test_balance_point():
     '''TODO docstring
@@ -107,26 +106,51 @@ def test_dummy_return_highest_B():
     If there's a dummy value -- return highest B value not dummy'''
     assert True
 
-def test_matrix_rotational_symmetry():
-    '''TODO docstring - mentioned
-    Is it rotational symmetry?
-    One cable, its coordinates equal to xp,yp. Double matrix reflection --- same matrix again'''
-    assert True
-
-def test_two_cables_central_symmetry_grid():
+def test_matrix_radial_symmetry(eg_input_single_OH):
     '''TODO docstring
-    Two cables, 2 symmetry axes all around them'''
-    assert True
+    One cable, its coordinates equal to xp,yp. Rotation of 90 degree --- same matrix again. And you could go on and on rotating
+    cable 2 and 3 very far apart because if I put all the phases in one point: total B zero
+    So not to influence the magnetic B field, they have to be very far away'''
+    xp, yp = 0, 0
+    cables_array = np.array([[[330, 0, 0], [210, 1000000, 1000000], [90, 1000020, 1000020]],
+                            [[np.nan, np.nan, np.nan], [np.nan, np.nan, np.nan], [np.nan, np.nan, np.nan]]])
+    grid_results = calculations.main_grid(eg_input_single_OH[0], xp, yp, eg_input_single_OH[3], cables_array, eg_input_single_OH[5]) # solo grid_results[2] è la griglia
+    rotation_90_degree = np.rot90(grid_results[2])
+    assert np.allclose(grid_results[2], rotation_90_degree)
 
-def test_commutative_property_grid():
+
+def test_two_cables_central_symmetry_grid(eg_input_UG):
     '''TODO docstring
-    If I swap the cables (1-2 / 2-1) -- same result'''
-    assert True
+    Cables along a line, 2 symmetry axes - horizontal and vertical'''
+    xp, yp = 0, -1.5
+    grid_results = calculations.main_grid(eg_input_UG[0], xp, yp, eg_input_UG[3], eg_input_UG[4], eg_input_UG[5]) # solo grid_results[2] è la griglia
+    horizontal_axis_reflection = np.flipud(grid_results[2])
+    vertical_axis_reflection = np.fliplr(grid_results[2])
+    assert np.allclose(grid_results[2], horizontal_axis_reflection)
+    assert np.allclose(grid_results[2], vertical_axis_reflection)
+
+def test_commutative_property_grid(eg_input_UG):
+    '''TODO docstring
+    If I swap the cables phases -- same result in all the grid'''
+    phases_permutations = permutations([90, 210, 330]) # SIX different permutations
+    grids_to_compare = np.empty((13, 13)) # grids_to_compare[0:13] will be empty. Escamotage needed to concatenate 2D arrays.
+    for phases_permutation in phases_permutations:
+        cables_array = np.array([[[phases_permutation[0], -0.2, -1.5], [phases_permutation[1], 0, -1.5], [phases_permutation[2], 0.2, -1.5]],
+                                [[np.nan, np.nan, np.nan], [np.nan, np.nan, np.nan], [np.nan, np.nan, np.nan]]])
+        grid_results = calculations.main_grid(eg_input_UG[0], eg_input_UG[1], eg_input_UG[2], eg_input_UG[3], cables_array, eg_input_UG[5])
+        grids_to_compare = np.concatenate((grids_to_compare, grid_results[2]))
+    # FIVE different assertions to compare with each other SIX different grids
+    for i in range(5):
+        first_index = (i+1)*13
+        second_index = (i+2)*13
+        third_index = (i+3)*13
+        assert np.allclose(grids_to_compare[first_index:second_index], grids_to_compare[second_index:third_index])
 
 def test_six_cables_axial_symmetry_grid():
     '''TODO docstring
     Six cables -- 1 vertical axis of symmetry'''
     assert True
+
 
 #TESTING CENTROID PROPERTIES
 

@@ -2,6 +2,7 @@ from cmath import rect
 from math import radians
 
 import numpy as np
+from numpy.core.fromnumeric import shape
 
 from .config import MU_ZERO, PI
 
