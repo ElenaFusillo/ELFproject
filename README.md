@@ -255,7 +255,7 @@ The repository chosen is the one where the program is run (.), the filename is t
 
 ## Test routines
 
-Tests are stored inside _test_calculations.py_ and _test_cli.py_ files, with the support of all the fixtures needeed contained in _conftest.py_.
+Tests are stored inside _test_cli.py_, _test_calculations_basics.py_ and _test_calculations_property.py_ files, with the support of all the fixtures needeed contained in _conftest.py_.
 In order to perform the tests, it is just necessary to invoke the _pytest_ module:
 
 ```bash
