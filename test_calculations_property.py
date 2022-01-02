@@ -1,5 +1,4 @@
 import numpy as np
-from numpy.core.defchararray import equal
 from itertools import permutations
 from B_field import calculations
 
@@ -85,17 +84,12 @@ def test_B_axial_symmetry_with_main_point(eg_input_UG):
     axial_symmetry_points = [(0, 0), (0, -3), (-1.7, -1.5), (1.7, -1.5)]
     B_values_to_check = np.empty((0))
     for i in range(4):
-        value_to_append = calculations.main_point(eg_input_UG[0], axial_symmetry_points[i][0], axial_symmetry_points[i][1], eg_input_UG[3], eg_input_UG[4], eg_input_UG[5])
-        B_values_to_check = np.append(B_values_to_check, value_to_append)
+        B_value_to_append = calculations.main_point(eg_input_UG[0], axial_symmetry_points[i][0], axial_symmetry_points[i][1], eg_input_UG[3], eg_input_UG[4], eg_input_UG[5])
+        B_values_to_check = np.append(B_values_to_check, B_value_to_append)
     #horizontal symmetry axis
     assert np.isclose(B_values_to_check[0], B_values_to_check[1])
     #vertical symmetry axis
     assert np.isclose(B_values_to_check[2], B_values_to_check[3])
-
-def test_balance_point():
-    '''TODO docstring
-    One cable pos x+1, one cable pos x-1. Middle point is balance point. I.e. where B1 - B2 = 0'''
-    assert True
 
 
 #TESTING MAIN_GRID PROPERTIES
@@ -117,7 +111,6 @@ def test_matrix_radial_symmetry(eg_input_single_OH):
     grid_results = calculations.main_grid(eg_input_single_OH[0], xp, yp, eg_input_single_OH[3], cables_array, eg_input_single_OH[5]) # solo grid_results[2] è la griglia
     rotation_90_degree = np.rot90(grid_results[2])
     assert np.allclose(grid_results[2], rotation_90_degree)
-
 
 def test_two_cables_central_symmetry_grid(eg_input_UG):
     '''TODO docstring
@@ -146,28 +139,50 @@ def test_commutative_property_grid(eg_input_UG):
         third_index = (i+3)*13
         assert np.allclose(grids_to_compare[first_index:second_index], grids_to_compare[second_index:third_index])
 
-def test_six_cables_axial_symmetry_grid():
+def test_six_cables_axial_symmetry_grid(eg_input_double_OH):
     '''TODO docstring
-    Six cables -- 1 vertical axis of symmetry'''
-    assert True
+    Six cables (double triad) -- 1 vertical axis of symmetry'''
+    xp, yp = 0, 11
+    grid_results = calculations.main_grid(eg_input_double_OH[0], xp, yp, eg_input_double_OH[3], eg_input_double_OH[4], eg_input_double_OH[5])
+    vertical_axis_reflection = np.fliplr(grid_results[2])
+    assert np.allclose(grid_results[2], vertical_axis_reflection)
+
+def test_all_phases_in_one_point(eg_input_UG):
+    '''TODO docstring
+    If I put all the three cables in the same point --- B field is zero
+    In fact twisted cables are used (in Low Voltage power lines) to drastically reduce B field'''
+    cables_array = np.array([[[330, 0, -1.5], [210, 0, -1.5], [90, 0, -1.5]],
+                            [[np.nan, np.nan, np.nan], [np.nan, np.nan, np.nan], [np.nan, np.nan, np.nan]]])
+    grid_results = calculations.main_grid(eg_input_UG[0], eg_input_UG[1], eg_input_UG[2], eg_input_UG[3], cables_array, eg_input_UG[5])
+    assert np.allclose(grid_results[2], 0)
 
 
 #TESTING CENTROID PROPERTIES
 
 
-def test_given_centroid():
+def test_given_centroid(eg_input_single_OH):
     '''TODO docstring
-    Three cables (clover-shape) around origin 0,0 -- centroid is where it should be'''
-    assert True
+    Three cables (clover-shape) -- centroid is where it should be'''
+    expected_xg, expected_yg = -1.2, 8.3
+    xg, yg = calculations.centroid(eg_input_single_OH[4], eg_input_single_OH[5])
+    assert expected_xg == xg, expected_yg == yg
+
 
 #TESTING MAIN_DPA PROPERTIES
 
-def test_dpa_current_doubled():
-    '''TODO docstring
-    Double current -- double dpa'''
-    assert True
 
-def test_dpa_y_independent():
+def test_dpa_y_independent(eg_input_double_OH):
     '''TODO docstring
     Same cable configuration. Different y coordinate -- same dpa'''
-    assert True
+    dpa_values_to_check = np.empty((0))
+    for y_displacement in range(5):
+        cables_array = np.array([[[330, -4.0, 6.3 + y_displacement],
+                                [210, -3.6, 11 + y_displacement],
+                                [90, -3.2, 15.7 + y_displacement]],
+
+                                [[330, 4.0, 6.3 + y_displacement],
+                                [210, 3.6, 11 + y_displacement],
+                                [90, 3.2, 15.7 + y_displacement]]])
+        dpa_value_to_append = calculations.main_dpa(eg_input_double_OH[0], eg_input_double_OH[3], cables_array, eg_input_double_OH[5], eg_input_double_OH[6])
+        dpa_values_to_check = np.append(dpa_values_to_check, dpa_value_to_append)
+    assert np.all(dpa_values_to_check == dpa_values_to_check[0])
