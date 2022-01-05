@@ -6,7 +6,6 @@ from B_field import calculations
 #TESTING CALC_B_PHASORS PROPERTIES
 
 
-#TODO strategies? For every xp, yp, phase, cable coordinates -- return zero
 def test_zero_current(eg_input_single_OH):
     '''
     Tests:
@@ -23,7 +22,6 @@ def test_zero_current(eg_input_single_OH):
     calculated_B_phasors = calculations.calc_B_phasors(zero_current, eg_input_single_OH[1], eg_input_single_OH[2], eg_input_single_OH[4][0][0])
     assert np.allclose(calculated_B_phasors, zero_phasors)
 
-#TODO strategies? For every current value, if it's doubled -- B doubles
 def test_current_is_doubled(eg_input_single_OH):
     '''
     Tests:
@@ -73,8 +71,6 @@ def test_null_denominator(eg_input_single_OH):
     yp_coincident_ycable = eg_input_single_OH[4][0][0][2]
     calculated_B_phasors = calculations.calc_B_phasors(eg_input_single_OH[0][0], xp_coincident_xcable, yp_coincident_ycable, eg_input_single_OH[4][0][0])
     assert np.all(np.isnan(calculated_B_phasors))
-    # FIXME returns two WARNINGS - to check
-    # TODO update README bash snippet
 
 
 #TESTING CALC_B_EFFECTIVE PROPERTIES
