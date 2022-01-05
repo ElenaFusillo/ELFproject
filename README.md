@@ -294,8 +294,8 @@ Here are a few useful links:
 **Author:**
 
 Elena Fusillo\
-efusillo@arpae.it\
-Arpae, Agenzia regionale per la prevenzione, l'ambiente e l'energia dell'Emilia Romagna\
+efusillo@arpae.it - elena.fusillo@studio.unibo.it\
+Arpae - Agenzia regionale per la prevenzione, l'ambiente e l'energia dell'Emilia Romagna\
 Via Guido Alberoni, 17\
 48121 Ravenna (RA), Italy
 
